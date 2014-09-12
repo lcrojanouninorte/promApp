@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="5dp"
+    tools:context=".SemestreFragment" >
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" >
+
+        <TextView
+            android:id="@+id/textViewSemestre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_title_semester"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/row1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+     
+    </LinearLayout>
+    <TextView
+      android:id="@+id/textView2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:text="@string/text_title_asignaturas"
+      android:textAppearance="?android:attr/textAppearanceMedium" />
+     <LinearLayout 
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal">
+         <LinearLayout
+             android:layout_width="0dp"
+             android:layout_weight="0.2"
+             android:layout_height="fill_parent"
+             android:gravity="center"
+             android:orientation="vertical">
+		     <TextView
+		           android:id="@+id/textViewLabelPromReq"
+		           android:layout_width="wrap_content"
+		           android:layout_height="0dp"
+		           android:layout_weight="0.7"
+		           android:gravity="center"
+		           android:text="@string/text_promedio_requerido" />
+		     <TextView
+		           android:id="@+id/textViewPromedioRequerido"
+		           android:layout_width="wrap_content"
+		           android:layout_height="0dp"
+		           android:layout_weight="0.3"
+		           android:text="@string/number" />
+	     </LinearLayout>
+	     <LinearLayout
+             android:layout_width="0dp"
+             android:layout_weight="0.2"
+             android:layout_height="fill_parent"
+             android:gravity="center"
+             android:layout_gravity="center"
+             android:orientation="vertical">
+		     <TextView
+		           android:id="@+id/textViewLabelpromSim"
+		           android:layout_width="wrap_content"
+		           android:layout_height="0dp"
+		           android:layout_weight="0.7"
+		           android:gravity="center"
+		           android:text="@string/text_promedio_simulado" />
+		     <TextView
+		           android:id="@+id/textViewPromedioSimulado"
+		           android:layout_width="wrap_content"
+		           android:layout_height="0dp"
+		           android:layout_weight="0.3"
+		           android:text="@string/number" />
+	     </LinearLayout>
+	        <LinearLayout
+             android:layout_width="0dp"
+             android:layout_weight="0.2"
+             android:layout_height="fill_parent"
+             android:gravity="center"
+             android:orientation="vertical">
+		     <TextView
+		           android:id="@+id/textViewLabelDif"
+		           android:layout_width="wrap_content"
+		           android:layout_height="0dp"
+		           android:layout_weight="0.7"
+		           android:gravity="center"
+		           android:text="@string/text_diferencia" />
+		     <TextView
+		           android:id="@+id/textViewDiferencia"
+		           android:layout_width="wrap_content"
+		           android:layout_height="0dp"
+		           android:layout_weight="0.3"
+		           android:layout_gravity="center"
+		           android:text="@string/number" />
+	     </LinearLayout>
+	     
+
+     </LinearLayout>
+
+     <TextView
+         android:id="@+id/textViewCreditosMatriculados"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/text_variable_creditos_matriculados" />
+     
+     <LinearLayout
+         android:id="@+id/row2"
+      	 android:layout_width="match_parent"
+      	 android:layout_height="0dp"
+      	 android:layout_weight="0.8"
+      	 android:orientation="horizontal">
+         </LinearLayout>
+  
+      <LinearLayout
+         android:layout_width="match_parent"
+          android:layout_height="0dp"
+      	 android:layout_weight="0.2"
+         android:gravity="center" >
+
+         <Button
+             android:id="@+id/buttonRecalcular"
+             style="?android:attr/buttonStyleSmall"
+             android:layout_width="0dp"
+             android:layout_weight="0.3"
+             android:layout_height="wrap_content"
+             android:text="@string/text_recalcular_promedio" />
+
+          <Button
+           android:id="@+id/buttonAddNewSubject"
+           android:layout_width="0dp"
+           android:layout_weight="0.4"
+           android:layout_height="wrap_content"
+           android:layout_gravity="center"
+           android:text="@string/text_nueva_asignatura" />
+
+          <Button
+              android:id="@+id/buttonFinalizarSemestre"
+              style="?android:attr/buttonStyleSmall"
+              android:layout_width="0dp"
+              android:layout_weight="0.3"
+              android:layout_height="wrap_content"
+              android:text="@string/text_finalizar_semestes" />
+         
+     </LinearLayout>
+         
+    
+
+</LinearLayout>

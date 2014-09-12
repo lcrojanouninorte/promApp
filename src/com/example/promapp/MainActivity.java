@@ -1,20 +1,92 @@
 package com.example.promapp;
 
+
+
+
+
+import java.util.List;
+
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
+import android.R.menu;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends FragmentActivity {
+	private SimuladorSemestralFragment simulador;
+	SharedPreferences prefs ;
+	public static final String MyPREFERENCES = "MyPrefs" ;
+	private AsignaturaFragment asignaturas;
+	private MenuPrincipalFragment menuPrincipal;
+	private SemestreFragment semestre;
+	public DatabaseHelper mHelper;
+	private Student student;
+	private Semester sem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getApplicationContext();
+		prefs = getSharedPreferences("MisPreferencias",Context.MODE_PRIVATE);
+        //Verificar si es primera vez que se usa el programa
+        if(mHelper==null){
+        	mHelper = new DatabaseHelper(this);
+        }
+        menuPrincipal = new MenuPrincipalFragment();       
+        FragmentManager fm = getSupportFragmentManager();  
+        fm.beginTransaction()        	
+          .add(R.id.container, menuPrincipal, "menu_principal")
+          .addToBackStack(null)
+          .commit();
+    }
+    public void setPreferences(String key, String value){
+       	
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(key, value);
+		editor.commit();
+    	
+    }
+    public String getPreferences(String key){
+    	return prefs.getString(key, "not");
+    }
+    public void setStudent(Student s){
+    	this.student = s;
+    }
+ 
+    public void showAsignaturaFragment(){
+    	asignaturas = new AsignaturaFragment();
+	    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.replace(R.id.container, asignaturas)
+		
+		.addToBackStack(null)
+		.commit();
+    	
     }
 
 
+	public void reloadFragment(String tag){
+	   	// Reload current fragment
+    	Fragment frg = null;
+    	frg = getSupportFragmentManager().findFragmentByTag(tag);
+    	final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    	ft.detach(frg);
+    	ft.attach(frg);
+    	ft.commit();
+	}
+	
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -28,9 +100,29 @@ public class MainActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_reset) {
+        	if (mHelper == null){
+        		mHelper = new DatabaseHelper(this);
+        	}
+        	mHelper.clearAll();
+        	reloadFragment("menu_principal");
             return true;
         }
+        
         return super.onOptionsItemSelected(item);
     }
+
+
+
+	public void showSimuladorSemestralFragment() {
+		SimuladorSemestralFragment sim = new SimuladorSemestralFragment();
+	    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.replace(R.id.container, sim)
+		.addToBackStack(null)
+		.commit();
+		
+	}
+
+
 }
+ 
