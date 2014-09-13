@@ -16,7 +16,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 	private static final String TABLE_STUDENT = "students";    
 	private static final String COLUMN_STUDENT_NAME = "nombre"; 
 	private static final String COLUMN_STUDENT_PROM_ACUM = "prom_acum";
-	private static final String COLUMN_STUDENT_PROM_ACUM_REQUERIDO = "prom_acum_requerido";
+	private static final String COLUMN_STUDENT_PROM_ACUM_REQUERIDO = "prom_acum_requerido";//Deseado
 	private static final String COLUMN_STUDENT_CREDITOS_CURSADOS = "creditos_cursados"; 
 	
 	private static final String TABLE_SEMESTER= "semesters";    
@@ -241,7 +241,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 			Semester s = new Semester();
 			s.setID(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));
 			s.setNombre(cursor.getString(cursor.getColumnIndex(COLUMN_SEMESTER_NAME)));
-			s.setCreditos(cursor.getInt(cursor.getColumnIndex(COLUMN_SEMESTER_CREDITOS)));
+			s.setCreditos(getCreditosSemestre(s.getID()));
 			s.setEstado(cursor.getString(cursor.getColumnIndex(COLUMN_SEMESTER_ESTADO)));
 			s.setPromRequerido(cursor.getFloat(cursor.getColumnIndex(COLUMN_SEMESTER_PROM_REQUERIDO)));
 			s.setPromReal(cursor.getFloat(cursor.getColumnIndex(COLUMN_SEMESTER_PROM_REAL)));
@@ -328,7 +328,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 		Cursor cursor = getWritableDatabase().rawQuery(
 			"SELECT * FROM " + TABLE_EVALUATIONS + " WHERE " + 
 			COLUMN_EVALUATION_SUBJECT_ID + " = " + subject_id + 
-			" AND " +COLUMN_EVALUATION_NAME + " = " + name , null);
+			" AND " +COLUMN_EVALUATION_NAME + " = '" + name+"'" , null);
 		Evaluation s;
 		if(cursor.moveToFirst()){
 			s = new Evaluation();
@@ -363,6 +363,212 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 			return null;
 		}
 		
+	}
+	public int getCreditosSemestre(long id) {
+		Cursor cursor = getWritableDatabase().rawQuery(
+				"SELECT "+COLUMN_SUBJECT_CREDITOS+" FROM " + TABLE_SUBJECTS + " WHERE " + 
+		        COLUMN_SUBJECT_SEMESTER_ID + " = " + id + "", null);
+		if(cursor.getCount()>0){
+		    int creditos = 0;
+			while(cursor.moveToNext()){
+				creditos = creditos + cursor.getInt(0);
+
+			}
+			return creditos;
+		}else{
+			return 0;
+		}
+		
+	}
+	SimulatorHelper sHelper;
+	public String setPromDeseadoAcumulado(Student s, Semester sem,float promDeseado) {
+		Evaluation[] evaluaciones = null;
+		Asignatura[] asignaturas;
+		SQLiteDatabase db = this.getWritableDatabase();
+	    sHelper = new SimulatorHelper();
+		ContentValues data=new ContentValues();
+		float semProm = sHelper.getPromRequeridoSemestral(s.getCredCursados(), sem.getCreditos(), promDeseado, s.getPromAcum());
+		if(semProm <=5 && semProm>0){
+			 //actualizar el promedio necesitado en las asignaturas}
+			s.setPromAcumDeseado(promDeseado);
+			sem.setPromSimulado(semProm);
+		    asignaturas = getAsignaturas(sem.getID());
+		    float puntosRequeridos = sem.getPromSimulado()*sem.getCreditos(); //Requeridos par aucmplir con el acum deseado
+			float puntosObtenidos = sHelper.getPuntosObtenidosAsignatura(asignaturas,sem.getPromSimulado());//obtenidos con la actual config de notas
+			sem.setDiferencia(puntosRequeridos-puntosObtenidos);
+			String out = setNotaRequeridaAsignaturas(s,sem, asignaturas);
+			if(out == "OK"){
+			//setNotaRequeridaAsignaturas(s, sem);
+				
+			 //Si todo va bien	
+			//Guardar prom deseado estudiante
+			 data.put(COLUMN_STUDENT_PROM_ACUM_REQUERIDO,promDeseado);
+			 db.update(TABLE_STUDENT, data,COLUMN_ID + " = " + s.getID(), null);
+			 //guardar semestre
+			 //TODO: verificar si el simestre esta finalizado
+			 updatePromRequeridoSemestre(sem,semProm);
+			 
+			 //actualizar asignaturas:
+			 updatePromRequeridoAsignaturas(asignaturas);
+			 //actualizar evaluaciones:
+			 updatePromRequeridoEvaluaciones(evaluaciones);
+			 
+		     
+			 return "OK";
+			}else{
+				return "Hubo un problema";
+			}
+		
+		}else{
+			return "Ese promedio no es alcanzable";
+		}
+		
+	}
+	public void updatePromRequeridoSemestre(Semester sem, float prom) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		sHelper = new SimulatorHelper();
+		 ContentValues data=new ContentValues();
+		 data = new ContentValues();
+		 data.put(COLUMN_SEMESTER_PROM_REQUERIDO,prom);
+		 db.update(TABLE_SEMESTER, data,COLUMN_ID + " = " + sem.getID(), null);
+		 sem.setPromRequerido(prom);
+		
+	}
+	public void  updatePromRequeridoAsignaturas(Asignatura[] asignaturas){
+		SQLiteDatabase db = this.getWritableDatabase();
+		for (Asignatura asignatura : asignaturas) {
+			 ContentValues data=new ContentValues();
+			 data = new ContentValues();
+			 data.put(COLUMN_SUBJECT_NOTA_REQUERIDA,asignatura.getNotaRequerida());
+			 db.update(TABLE_SUBJECTS, data,COLUMN_ID + " = " + asignatura.getID(), null);
+			 updatePromRequeridoEvaluaciones(asignatura.getEvaluaciones());
+		}
+
+		
+	}
+	public void  updatePromRequeridoEvaluaciones(Evaluation[] evals){
+		SQLiteDatabase db = this.getWritableDatabase();
+		if(evals != null){
+		for (Evaluation eval: evals) {
+			 ContentValues data=new ContentValues();
+			 data = new ContentValues();
+			 data.put(COLUMN_EVALUATION_NOTA_REQUERIDA,eval.getNota_requerida());
+			 db.update(TABLE_EVALUATIONS, data,COLUMN_ID + " = " + eval.getID(), null);
+		}
+		}
+		
+	}
+	public String setNotaRequeridaAsignaturas(Student s, Semester sem, Asignatura[] asignaturas) {
+		//Se compara la diferencia de puntos del semestre normal, y la nota simulada 
+		//nota que debe tener cada asignatura no bloqueada
+		asignaturas =  sHelper.getNotaAsignaturasSimuladas(asignaturas,sem.getPromSimulado(),sem.getDiferencia() ,sem.getCreditos()); 
+	    if(asignaturas != null){
+	    	//una ves verificado y obtenido cuanto se debe subir cada asignatura a verificar si las evaluaciones
+	    	//permiten esa nota
+	    	for (Asignatura asignatura : asignaturas) {
+				Evaluation[] evals = getEvaluations(asignatura.getID());
+				asignatura.setEvaluaciones(evals);
+				if(evals!= null){
+					sHelper.distribuirPromedioAEvaluaciones(evals, asignatura.getNotaRequerida());
+			    	float porcentajeRequerido = asignatura.getNotaRequerida();
+			    	float porcentajeObtenido = sHelper.getPorcentajeObtenidoEvaluacion(evals);
+			    	// if(porcentajeObtenido<porcentajeRequerido){
+			    		 //nota que debe tener cada evaluacion de la asignatura
+			    		 evals =  sHelper.getNotaEvaluacionesSimuladas(evals, porcentajeRequerido - porcentajeObtenido); 
+			    		 if(evals != null){
+			    			 return "OK";
+			    			 
+			    		 }else{
+			    			 return "Hay notas de evaluaciones que querarian por encima de 5!";
+			    		 }
+			    	 }
+				//}
+			}
+
+	    	
+	    	
+	    }else{
+	    	return "Algunas asignaturas te quedarian en más de 5"; 
+	    }
+
+	 
+		
+	 return "OK";
+		 
+		
+	}
+	public Asignatura[] getAsignaturas(long sem_id){
+		 String[] sub =  getSubjectsNames(sem_id);
+		 Asignatura[] a = new Asignatura[sub.length];
+		 int i = 0;
+		 for (String nombre : sub) {
+			 a[i] = getSubjectByName(sem_id, nombre);
+		     i++;
+		}
+		 return a;
+	}
+	public Evaluation[] getEvaluations(long asig_id){
+		 String[] sub =  getEvaluacionesNames(asig_id);
+		 if(sub!=null){
+			 Evaluation[] a = new Evaluation[sub.length];
+			 int i = 0;
+			 for (String nombre : sub) {
+				 a[i] = getEvaluationByName(asig_id, nombre);
+			     i++;
+			}
+			 return a;
+		 }else{
+			 return null;
+		 }
+		 
+		
+	}
+	public void setPromDeseadoRequeridoEvaluaciones(String stud_id, String prom) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		 ContentValues data=new ContentValues();
+		 data.put(COLUMN_STUDENT_PROM_ACUM_REQUERIDO,prom);
+		 db.update(TABLE_STUDENT, data,COLUMN_ID + " = " + stud_id, null);
+		 
+		 //TODO: update requerido semeste y asignaturas en estado libre
+		 
+		 
+		
+	}
+	public boolean isPorcentajeLleno(int newporcent, long subject_id) {
+		Cursor cursor = getWritableDatabase().rawQuery(
+				"SELECT "+COLUMN_EVALUATION_PORCENTAJE+" FROM " + TABLE_EVALUATIONS + " WHERE " + 
+		        COLUMN_EVALUATION_SUBJECT_ID + " = " + subject_id + "", null);
+		if(cursor.getCount()>0){
+		    int porcent = 0;
+			while(cursor.moveToNext()){
+				porcent = porcent + cursor.getInt(0);
+			}
+			int total = (porcent+newporcent);
+			if(total>100){
+				return true;
+			}else{
+				return false;
+			}
+			
+		}else{
+			return false;
+		}
+		
+	}
+	public int  getPorcentajeIngresado(long id) {
+		// TODO Auto-generated method stub
+		Cursor cursor = getWritableDatabase().rawQuery(
+				"SELECT SUM("+COLUMN_EVALUATION_PORCENTAJE+") FROM " + TABLE_EVALUATIONS + " WHERE " + 
+		        COLUMN_EVALUATION_SUBJECT_ID + " = " + id+ "", null);
+			    
+			if(cursor.moveToFirst())
+			{
+				int porcent = cursor.getInt(0);;
+				return porcent; 
+			}else{
+				return 0;
+			}
+	
 	}
 
 

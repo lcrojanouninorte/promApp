@@ -22,8 +22,7 @@ public class FirstTimeFragment extends DialogFragment{
 	 @Override   
 	 public void onCreate(Bundle savedInstanceState) {       
 		 super.onCreate(savedInstanceState);    
-		 
-		 
+		 setCancelable(false);
 	 }
 	
 	 @Override  
@@ -48,7 +47,8 @@ public class FirstTimeFragment extends DialogFragment{
 	@Override
 	 public void onStart()
 	 {
-	     super.onStart();    //super.onStart() is where dialog.show() is actually called on the underlying dialog, so we have to do it after this point
+		//Sobre escribimos el listener para que se realicen oopiones reuqeridas
+	     super.onStart();    //super.onStart() is where dialog.show() is actually called 
 	     AlertDialog d = (AlertDialog)getDialog();
 	     toast = Toast.makeText(getActivity().getApplicationContext(),
 	    		 "Datos agregados Correctamente", 
@@ -61,14 +61,13 @@ public class FirstTimeFragment extends DialogFragment{
 	                     @Override
 	                     public void onClick(View v)
 	                     {
+	                    	 //Controlar si se debe salir del dialog
 	                    	 if(!insertStudentFirstTime(vi)){    
 	                    		 
 	                    	 }else{
 		                         toast.setText("Datos Ingresados Correctamente");
 		                       	 toast.show();
-
 		                       	 dismiss();
-		                         
 		                       	 //recargar layout menuprincipal
 		                       
 		                       	((MainActivity)getActivity()).reloadFragment("menu_principal");
@@ -78,7 +77,8 @@ public class FirstTimeFragment extends DialogFragment{
 	     }
 	 }
 		private boolean insertStudentFirstTime(View v){
-			 //obtener los views y sus datos
+			 //La primera vez que el usuario ingresa, se debe verificar, que el promedio deseado
+			//sea alcanzable
 			//Estudiante
 			 boolean go = true;
 			 Student e = new Student();
@@ -100,7 +100,9 @@ public class FirstTimeFragment extends DialogFragment{
 		   		 edit.setError("Estos creditos no son validos");
 		   		go =false;
 		   	 }
-		   	 e.setPromAcumDeseado(e.getPromAcum()); //el prom deseado por defecto es el acumulado real
+		   	 e.setPromAcumDeseado(e.getPromAcum()); 
+		   	 //el prom deseado por defecto es el acumulado real la primera ves
+
 		   	 if(go){
 			   	 //semestre
 			    Spinner spinner = (Spinner)v.findViewById(R.id.spinnerSemestreACusar);
@@ -108,6 +110,7 @@ public class FirstTimeFragment extends DialogFragment{
 		   	    DatabaseHelper mHelper =  ((MainActivity)getActivity()).mHelper;
 		   	    e.setID(mHelper.insertStudent(e));
 				if(e.getID() != -1){
+				   	 
 					//crear un semestre
 					Semester sem = new Semester(semestre, e.getID(),e.getPromAcum());
 					sem.setID(mHelper.insertSemester(e.getID(),sem));

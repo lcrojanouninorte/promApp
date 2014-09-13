@@ -60,11 +60,8 @@ public class AddAsignaturaFragment extends DialogFragment{
 	                    	 }else{
 		                         toast.setText("Datos Ingresados Correctamente");
 		                       	 toast.show();
-
-		                       	 dismiss();
-		                         
-		                       	 //recargar layout menuprincipal
-		                       
+		                       	 dismiss();          
+		                       	 //recargar layout menuprincipal		                       
 		                       	((MainActivity)getActivity()).reloadFragment("semestre");
 	                        }
 	                     }
@@ -110,7 +107,7 @@ public class AddAsignaturaFragment extends DialogFragment{
 					toast.setText("Error al Ingresar Datos");
                   	toast.show();
                   	edit.setError(null);					
-				}else{
+				}else{			
 					((MainActivity)getActivity()).setPreferences(e.getNombre(),e.getID()+"" );
 
 				}

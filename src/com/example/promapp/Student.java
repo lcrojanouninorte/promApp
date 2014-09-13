@@ -13,6 +13,7 @@ public class Student {
 	   
 	private int credCursados;
 	private Semester semester;
+	private float maxDeseado;
 	   
 	 
 	public Student() {
@@ -140,6 +141,13 @@ public class Student {
 	public void setSemester(Semester semester) {
 		this.semester = semester;
 		
+	}
+	public void setMaxDeseado(float maxDeseado) {
+		this.maxDeseado = maxDeseado;
+		
+	}
+	public float getMaxDeseado() {
+		return maxDeseado;
 	}
 
 

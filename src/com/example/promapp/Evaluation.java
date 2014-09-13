@@ -4,12 +4,16 @@ public class Evaluation {
 	private long id;
 	private long asignaturaId;
 	private int porcentaje;
-	private String nombre;
+	private String nombre = "";
 	private float nota_requerida;
 	private float nota_simulada;
 	private float nota_real;
-	private String estado;
+	private String estado = "";
 	
+	public Evaluation() {
+		this.estado = "";
+		this.nombre ="";
+	}
 	public boolean setNombre(String nombre) {
 		if(!nombre.isEmpty() ){
 			this.nombre = nombre;

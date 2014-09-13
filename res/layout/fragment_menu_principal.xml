@@ -56,7 +56,7 @@
 		    android:id="@+id/textViewPromDeseado"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:text="@string/promedio_deseado" />
+		    android:text="@string/text_promedio_requerido" />
 		</LinearLayout>
 	</LinearLayout>
     <LinearLayout

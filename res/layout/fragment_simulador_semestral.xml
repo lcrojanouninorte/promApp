@@ -3,131 +3,145 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
-	<LinearLayout 
-	        
-		    android:layout_width="0dp"
-		    android:layout_weight="0.4"
-		    android:layout_height="match_parent"
-		    android:orientation="vertical" 
-		    android:gravity="center"
-		    android:padding="10dp">
-		   <LinearLayout
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content" 
-				android:gravity="left|center_vertical">
-		       <TextView
-		           android:id="@+id/textViewTitle"
-		           android:layout_width="wrap_content"
-		           android:layout_height="wrap_content"
-		           android:text="@string/text_title_simulador_semestral"
-		           android:textAppearance="?android:attr/textAppearanceMedium" />	   
-		    </LinearLayout>
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:orientation="vertical" >
 
-		    <LinearLayout
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:padding="0dp" >
+   <LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" 
+		android:gravity="left|center_vertical">
 
-		        <TextView
-		            android:id="@+id/textViewLabelPromAcum"
-		            android:layout_width="0dp"
-		            android:layout_height="wrap_content"
-		            android:layout_weight="0.4"
-		            android:text="@string/promedio_deseado"
-		            android:textSize="12dp" />
+       <TextView
+           android:id="@+id/textViewTitle"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:paddingBottom="10dp"
+           android:text="@string/text_title_simulador_semestral"
+           android:textAppearance="?android:attr/textAppearanceSmall" />
+  
+    </LinearLayout>
 
-		        <EditText
-		            android:id="@+id/editTextPromAcumDeseado"
-		            android:layout_width="0dp"
-		            android:layout_height="wrap_content"
-		            android:layout_weight="0.4"
-		            android:ems="10"
-		            android:inputType="numberDecimal"
-		            android:textSize="12dp" >
-		
-		            <requestFocus />
-		        </EditText>
-		
-		        <Button
-		            android:id="@+id/buttonCambiarAcumDeseado"
-		            style="?android:attr/buttonStyleSmall"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:minHeight="35dp"
-		            android:minWidth="35dp"
-		            android:text="@string/textbutton_cambiar"
-		            android:textSize="12dp" />
-				   
-		    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
 
-		        <LinearLayout
-		            android:layout_width="fill_parent"
-		            android:layout_height="wrap_content"
-		            android:padding="0dp" >
-		
-		            <TextView
-		                android:id="@+id/textViewLabelSemestralRequerido"
-		                android:layout_width="0dp"
-		                android:layout_height="wrap_content"
-		                android:layout_weight="0.4"
-		                android:text="@string/text_promedio_requerido"
-		                android:textSize="12dp" />
-		
-		            <EditText
-		                android:id="@+id/editTextPromRequerido"
-		                android:layout_width="0dp"
-		                android:layout_height="wrap_content"
-		                android:layout_weight="0.4"
-		                android:ems="10"
-		                android:inputType="numberDecimal"
-		                android:textSize="12dp" />
-		
-		            <Button
-		                android:id="@+id/buttonCambiarPromRequerido"
-		                style="?android:attr/buttonStyleSmall"
-		                android:layout_width="wrap_content"
-		                android:layout_height="wrap_content"
-		                android:minHeight="35dp"
-		                android:minWidth="35dp"
-		                android:text="@string/textbutton_cambiar"
-		                android:textSize="12dp" />
-				   
-		    </LinearLayout>
+        >
 
-		  	<LinearLayout
-		  	    android:layout_width="fill_parent"
-		  	    android:layout_height="wrap_content"
-		  	    android:padding="0dp" >
-		
-		            <TextView
-		                android:id="@+id/textViewLabelCreditosCursados"
-		                android:layout_width="0dp"
-		                android:layout_height="wrap_content"
-		                android:layout_weight="0.4"
-		                android:text="@string/creditos_cursados"
-		                android:textSize="12dp" />
-		
-		            <EditText
-		                android:id="@+id/editTextCreditosCursados"
-		                android:layout_width="0dp"
-		                android:layout_height="wrap_content"
-		                android:layout_weight="0.4"
-		                android:ems="10"
-		                android:inputType="number"
-		                android:textSize="12dp" />
-		
-		            <Button
-		                android:id="@+id/buttonCambiarCreditos"
-		                style="?android:attr/buttonStyleSmall"
-		                android:layout_width="wrap_content"
-		                android:layout_height="wrap_content"
-		                android:minHeight="35dp"
-		                android:minWidth="35dp"
-		                android:text="@string/textbutton_cambiar"
-		                android:textSize="12dp" />
-				   
-		    </LinearLayout>  
-		
-		</LinearLayout>
+        <TextView
+            android:id="@+id/textViewLabelPromAcum"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:text="@string/promedio_deseado"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/editTextPromAcumDeseado"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:ems="3"
+            android:gravity="center"
+            android:inputType="numberDecimal"
+            android:textSize="12sp" >
+
+            <requestFocus />
+        </EditText>
+
+        <Button
+            android:id="@+id/buttonCambiarAcumDeseado"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="20dp"
+            android:minWidth="20dp"
+            android:text="@string/textbutton_cambiar"
+            android:textSize="12sp" />
+		   
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+             >
+
+            <TextView
+                android:id="@+id/textViewLabelSemestralRequerido"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:text="@string/text_promedio_requerido"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/editTextPromRequerido"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:ems="3"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/buttonCambiarPromRequerido"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="20dp"
+                android:minWidth="20dp"
+                android:text="@string/textbutton_cambiar"
+                android:textSize="12sp" />
+		   
+    </LinearLayout>
+
+  	<LinearLayout
+  	    android:layout_width="fill_parent"
+  	    android:layout_height="wrap_content"
+  	            android:layout_marginLeft="5dp"
+  	    >
+
+            <TextView
+                android:id="@+id/textViewLabelCreditosCursados"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:text="@string/creditos_cursados"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/editTextCreditosCursados"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:ems="3"
+                android:gravity="center"
+                android:inputType="number"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/buttonCambiarCreditos"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="20dp"
+                android:minWidth="20dp"
+                android:text="@string/textbutton_cambiar"
+                android:textSize="12sp" />
+		   
+    </LinearLayout>
+
+  	<TextView
+  	    android:id="@+id/textViewRecomendacin"
+  	    android:layout_width="wrap_content"
+  	    android:layout_height="wrap_content"
+  	    android:gravity="center"
+  	    android:text="@string/number"
+  	    android:textSize="12sp" 
+  	    android:paddingBottom="10dp"
+  	    />
+
 </LinearLayout>

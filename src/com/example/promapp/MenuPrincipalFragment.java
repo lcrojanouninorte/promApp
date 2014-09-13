@@ -60,6 +60,7 @@ public class MenuPrincipalFragment extends Fragment {
 		DatabaseHelper mHelper =  ((MainActivity)getActivity()).mHelper;
         student = mHelper.getStudent();
 		  if(student == null){
+			  //Dialog Fragment si es primera ves en la aplicacion
 	        	FragmentManager fm = getActivity().getSupportFragmentManager(); 
 		    	FirstTimeFragment nAsig = new FirstTimeFragment();                
 		    	nAsig.show(fm, "FirstTime"); 

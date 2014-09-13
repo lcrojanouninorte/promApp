@@ -70,23 +70,35 @@ public class AddEvaluacionFragment extends DialogFragment {
 			//obtener los views y sus datos
 			//Estudiante
 			 boolean go = true;
+			 long asig_id = getArguments().getLong("asignatura");
 			 Evaluation e = new Evaluation();
 		   	 EditText edit = (EditText)v.findViewById(R.id.editTextNombreEval);
 		   	 String nombre = edit.getText().toString();
 		   	 //TODO:verificar que la asignatura no exista
-		   	 if(!e.setNombre(nombre)){
-		   		 edit.setError("Olvidaste colocar el nombre!");
-		   		 go =false;
-		   	 }
+		   	 //TODO:verificar que no exida el porcentaje
 		   	 edit = (EditText)v.findViewById(R.id.editTextPorcentajeEval);
 		   	 String porcentaje = edit.getText().toString();
 		   	 if(!e.setPorcentaje(porcentaje)){
 		   		 edit.setError("Ingrese un porcentaje valido");
 		   		 go =false;
+		   	 }else{
+				  boolean porcentajeLleno = ((MainActivity)getActivity()).mHelper.isPorcentajeLleno(e.getPorcentaje(), asig_id);
+				  if(porcentajeLleno){
+					  edit.setError("Esa asignatura Sobrepasa el porcentaje");
+				      go =false;
+				  }
 		   	 }
+			  
+		   	 
+		   	 if(!e.setNombre(nombre)){
+		   		 edit.setError("Olvidaste colocar el nombre!");
+		   		 go =false;
+		   	 }
+
 		   	  	 
 		   	 if(go){
-		   		long asig_id = getArguments().getLong("asignatura");
+		   		
+		   		e.setNota_Requerida(getArguments().getFloat("nota_requerida"));
 			   	e.setAsignaturaID(asig_id);
 		   	    DatabaseHelper mHelper =  ((MainActivity)getActivity()).mHelper;
 		   	    e.setID(mHelper.insertEvaluation(e));

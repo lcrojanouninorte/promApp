@@ -11,6 +11,7 @@ public class Semester {
 	private float promReal;
 	private long mId;
 	private float promSimulado;
+	private float diferencia = 0;
 	
 	
 
@@ -111,9 +112,12 @@ public class Semester {
 		this.promSimulado = promSimulado;
 	}
 
-	public float getDiferencia() {
+	public void setDiferencia(float dif) {
 	
-		return this.promRequerido - this.promSimulado;
+		 this.diferencia = dif;
+	}
+	public float getDiferencia() {
+		return diferencia;
 	}
 	
 }

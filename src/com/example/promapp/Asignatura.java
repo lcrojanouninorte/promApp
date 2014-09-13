@@ -12,6 +12,7 @@ public class Asignatura {
 	private long id;
 	private String estado  ="";
 	private int porcentaje = 0;
+	private Evaluation[] evaluaciones;
 	
 
 	public String getNombre() {
@@ -129,8 +130,15 @@ public class Asignatura {
 			//TODO:
 			//calcular porcentaje basado en las evaluaciones
 		}
-
+public long getSemesterId() {
+	return semesterId;
+}
 		
-
+public void setEvaluaciones(Evaluation[] evaluaciones) {
+	this.evaluaciones = evaluaciones;
+}
+public Evaluation[] getEvaluaciones() {
+	return evaluaciones;
+}
 
 }

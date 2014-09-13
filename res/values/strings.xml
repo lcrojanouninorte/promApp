@@ -24,7 +24,9 @@
         <item>IX</item>
         <item>X</item>
     </string-array>
+   
     <string name="spinner_title_semeters">Seleccione el Semestre a Cursar</string>
+    <string name="spinner_title_programas">Seleccione programa</string>
     <string name="principal_title">Menú Principal</string>
     <string name="user_name">Nombre:</string>
     <string name="estado">Estado:</string>

@@ -45,8 +45,9 @@ public class AsignaturaFragment extends Fragment{
 						.setText(asig.getNotaRequerida()+"");
 			((TextView) rootView.findViewById(R.id.textViewTitleEditAsig))
 	        			.setText(asig.getNombre());
+			int por = ((MainActivity)getActivity()).mHelper.getPorcentajeIngresado(asig.getID());
             ((TextView) rootView.findViewById(R.id.textViewPorcentaje))
-	        			.setText("Porcentaje Ingresado: "+asig.getPorcentaje());
+	        			.setText("Porcentaje Ingresado: "+por);
 			((TextView) rootView.findViewById(R.id.textViewNotaRequerida))
 				        .setText(""+asig.getNotaRequerida());
 			((TextView) rootView.findViewById(R.id.textViewNotaSimulada))
@@ -75,6 +76,7 @@ public class AsignaturaFragment extends Fragment{
 		
  	 
 		args.putLong("asignatura_id", asig.getID());
+		args.putFloat("nota_requerida", asig.getNotaRequerida());
 		evaluaciones = new EvaluationListFragment();
 		evaluaciones.setArguments(args);
 		FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();

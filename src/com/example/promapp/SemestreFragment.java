@@ -41,7 +41,6 @@ public class SemestreFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater,@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_semestre, container, false);
 		Student stud = ((MainActivity)getActivity()).mHelper.getStudent();
-
 		if(stud!= null){
 			((MainActivity) getActivity()).setPreferences("student_id", stud.getID()+"");
 			Semester sem = ((MainActivity)getActivity()).mHelper.getSemester(stud.getID());
@@ -57,6 +56,8 @@ public class SemestreFragment extends Fragment {
 						.setText(""+sem.getPromSimulado());
 			((TextView) rootView.findViewById(R.id.textViewDiferencia))
 						.setText(""+sem.getDiferencia());
+
+			
 			//toast.setText("cargado");
 			//toast.show();
 		
