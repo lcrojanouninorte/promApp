@@ -50,8 +50,9 @@ public class SemestreFragment extends Fragment {
 	        .setText(sem.getSemestre()+" Semestre");
             ((TextView) rootView.findViewById(R.id.textViewCreditosMatriculados))
 	        .setText("Creditos Matriculados: "+sem.getCreditos());
+            double req = ((MainActivity)getActivity()).roundTwoDecimals(sem.getPromRequerido());
 			((TextView) rootView.findViewById(R.id.textViewPromedioRequerido))
-				        .setText(""+sem.getPromRequerido());
+				        .setText(""+req);
 			((TextView) rootView.findViewById(R.id.textViewPromedioSimulado))
 						.setText(""+sem.getPromSimulado());
 			((TextView) rootView.findViewById(R.id.textViewDiferencia))

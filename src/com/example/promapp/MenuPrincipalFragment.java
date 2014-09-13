@@ -100,7 +100,13 @@ public class MenuPrincipalFragment extends Fragment {
 				int val;
 				
 				Bundle args = new Bundle();
-				((MainActivity)getActivity()).showSimuladorSemestralFragment();
+				SimuladorPromedioAcumuladoFragment sim = new SimuladorPromedioAcumuladoFragment();
+				sim.setArguments(args);
+			    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+				ft.replace(R.id.container, sim,"sim")
+				.addToBackStack(null)
+				.commit();
+				
 			}
 		});
 		Button buttonSimuladorAsignatura = ((Button) rootView.findViewById(R.id.buttonSimPromAsignaturas));
@@ -112,6 +118,7 @@ public class MenuPrincipalFragment extends Fragment {
 				int val;
 				Bundle args = new Bundle();
 				((MainActivity)getActivity()).showAsignaturaFragment();
+				
 			}
 		});
 		Button buttonHistoria = ((Button) rootView.findViewById(R.id.buttonHistoria));

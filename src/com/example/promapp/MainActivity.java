@@ -4,6 +4,7 @@ package com.example.promapp;
 
 
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import android.support.v4.app.Fragment;
@@ -120,6 +121,12 @@ public class MainActivity extends FragmentActivity {
 		.addToBackStack(null)
 		.commit();
 		
+	}
+	
+	double roundTwoDecimals(double d)
+	{
+	    DecimalFormat twoDForm = new DecimalFormat("#.##");
+	    return Double.valueOf(twoDForm.format(d));
 	}
 
 

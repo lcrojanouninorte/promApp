@@ -12,6 +12,7 @@
     <string name="promedio_deseado">Promedio deseado</string>
     <string name="semestre_a_cursar">Semestre a Cursar</string>
     <string name="boton_enviar">Enviar</string>
+    <string name="text_title_simulador_prom_acum">Simulador de Promedio Acumulado</string>
     <string-array name="Semestres">
         <item>I</item>
         <item>II</item>

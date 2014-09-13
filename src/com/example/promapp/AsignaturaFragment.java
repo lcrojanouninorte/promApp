@@ -41,15 +41,18 @@ public class AsignaturaFragment extends Fragment{
 	    		 Toast.LENGTH_SHORT);
 		asig = ((MainActivity)getActivity()).mHelper.getSubjectByName(id, nombre_asignatura );
 		if(asig != null){
+			double req = ((MainActivity)getActivity()).roundTwoDecimals(asig.getNotaRequerida());
 			((TextView) rootView.findViewById(R.id.editTextChangeRequerido))
-						.setText(asig.getNotaRequerida()+"");
+			
+						.setText(req+"");
 			((TextView) rootView.findViewById(R.id.textViewTitleEditAsig))
 	        			.setText(asig.getNombre());
 			int por = ((MainActivity)getActivity()).mHelper.getPorcentajeIngresado(asig.getID());
             ((TextView) rootView.findViewById(R.id.textViewPorcentaje))
 	        			.setText("Porcentaje Ingresado: "+por);
+            
 			((TextView) rootView.findViewById(R.id.textViewNotaRequerida))
-				        .setText(""+asig.getNotaRequerida());
+				        .setText(""+req);
 			((TextView) rootView.findViewById(R.id.textViewNotaSimulada))
 						.setText(""+asig.getNotaSimulada());
 			((TextView) rootView.findViewById(R.id.textViewDiferencia))
