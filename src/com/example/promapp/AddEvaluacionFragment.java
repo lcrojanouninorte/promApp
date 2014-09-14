@@ -83,7 +83,7 @@ public class AddEvaluacionFragment extends DialogFragment {
 		   		 edit.setError("Ingrese un porcentaje valido");
 		   		 go =false;
 		   	 }else{
-				  boolean porcentajeLleno = ((MainActivity)getActivity()).mHelper.isPorcentajeLleno(e.getPorcentaje(), asig_id);
+				  boolean porcentajeLleno = ((MainActivity)getActivity()).mHelper.isPorcentajeLleno(e.getPorcentaje(), asig_id,-1);
 				  if(porcentajeLleno){
 					  edit.setError("Esa asignatura Sobrepasa el porcentaje");
 				      go =false;

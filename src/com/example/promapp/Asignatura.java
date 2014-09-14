@@ -3,18 +3,22 @@ package com.example.promapp;
 import android.R.bool;
 
 public class Asignatura {
-	private String nombre = "";
+	private String nombre;
 	private int creditos;
 	private float nota_real;
 	private float nota_requerida;
 	private float nota_simulada;
 	private long semesterId;
 	private long id;
-	private String estado  ="";
+	private String estado;
 	private int porcentaje = 0;
 	private Evaluation[] evaluaciones;
 	
 
+	public Asignatura() {
+		this.estado = "";
+		this.nombre = "";
+	}
 	public String getNombre() {
 		return nombre;
 	}
@@ -70,6 +74,9 @@ public class Asignatura {
 			this.id =  id;
 		}
 		public String getEstado() {
+			if(this.estado == null){
+				this.estado = "";
+			}
 			return this.estado;
 		}
 		

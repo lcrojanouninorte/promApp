@@ -4,15 +4,15 @@ public class Evaluation {
 	private long id;
 	private long asignaturaId;
 	private int porcentaje;
-	private String nombre = "";
+	private String nombre;
 	private float nota_requerida;
 	private float nota_simulada;
 	private float nota_real;
-	private String estado = "";
+	private String estado;
 	
 	public Evaluation() {
 		this.estado = "";
-		this.nombre ="";
+		this.nombre = "";
 	}
 	public boolean setNombre(String nombre) {
 		if(!nombre.isEmpty() ){
@@ -30,17 +30,17 @@ public class Evaluation {
 		if(porcentaje>=0 && porcentaje <= 100){
 			this.porcentaje = porcentaje;
 			return true;
-		}else{
-			return false;
 		}
+		return false;
+		
 	}
 	public boolean setPorcentaje(String por) {
 		if(!por.isEmpty()){
 			int porcentaje = Integer.parseInt(por);
 			return setPorcentaje(porcentaje);
-		}else{
-			return false;
 		}
+			return false;
+		
 		
 	}
 	public int getPorcentaje() {
@@ -132,6 +132,9 @@ public class Evaluation {
 	}
 	
 	public String getEstado() {
+		if(this.estado == null){
+			this.estado = "";
+		}
 		return this.estado;
 	}
 	public void setEstado(String estado) {

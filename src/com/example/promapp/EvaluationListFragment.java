@@ -1,37 +1,51 @@
 package com.example.promapp;
 
 
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 
-import android.graphics.drawable.Drawable;
+
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+
+import android.support.v4.app.FragmentManager;
+
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
+import android.widget.ImageButton;
+
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
+
 
 public class EvaluationListFragment extends ListFragment {
 	String[] text; 
+	Bundle args;
+	ImageButton imgButton;
+	long asignatura_id;
+	 List<HashMap<String,String>> aList;
+	 View rootView;
+	
 	  @Override  
 	  public View onCreateView(LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {  
-		 // View rootView = inflater.inflate(R.layout.listfragment_asignaturas, container, false);
+		  rootView = inflater.inflate(R.layout.listfragment_asignaturas, container, false);			
+		/*  
+*/
+			
 		  //obtener las asignaturas creadas, si las hay
-		  long asignatura_id = getArguments().getLong("asignatura_id");
-		  List<HashMap<String,String>>   aList = ((MainActivity) getActivity()).mHelper.getEvaluationsItems(asignatura_id);
+		  args = new Bundle();
+		  asignatura_id = getArguments().getLong("asignatura_id");
+		    aList = ((MainActivity) getActivity()).mHelper.getEvaluationsItems(asignatura_id);
 		 // String[] evaluaciones = ((MainActivity) getActivity()).mHelper.getEvaluacionesNames(asignatura_id);
 		  if( aList  != null){
 			  //text = evaluaciones;
-			  String[] from = { "nombre","nota","porcentaje","estado"};
+			  String[] from = { "nombre","nota","porcentaje","estado","img"};
 	          // Ids of views in listview_layout
-	          int[] to = { R.id.nombre,R.id.nota,R.id.porcentaje,R.id.estado};
+	          int[] to = { R.id.nombre,R.id.nota,R.id.porcentaje,R.id.estado, R.id.img};
 
 	      // Instantiating an adapter to store each items
 	      // R.layout.listview_layout defines the layout of each item
@@ -59,12 +73,62 @@ public class EvaluationListFragment extends ListFragment {
 	
 	 
 	  }  
+	  
 	  @Override  
 	  public void onListItemClick(ListView l, View v, int position, long id) {  
 		  super.onListItemClick(l, v, position, id);
 			String val;
-			if(text[position] != "!No has ingresado ninguna asignatura!"){
-
-			}
+			
+			HashMap<String, String> hm = new HashMap<String,String>();
+			hm = aList.get(position);
+			String nombre = hm.get("nombre");
+			val = hm.get("estado").replace("!", "");
+			val = val.replace("Estado: ", "");
+			String estado = val;
+			val = hm.get("nota").replace("Prom. Requerido: ", "");
+			String nota = val;
+			String img = hm.get("img");
+			val =hm.get("porcentaje").replace("%","");
+			val = val.replace("Porcentaje: ", "");
+			String porcentaje = val;
+			
+			 imgButton = (ImageButton)v.findViewById(R.id.imageButtonDelete);
+			 
+		
+			args.putString("nombre_eval", nombre);
+			args.putLong("asignatura_id", asignatura_id);
+			args.putString("estado", estado);
+			args.putString("nota", nota);
+			args.putString("porcentaje", porcentaje);
+			args.putString("img", img);
+			
+				FragmentManager fm = getActivity().getSupportFragmentManager(); 
+		    	EditEvaluationFragment nAsig = new EditEvaluationFragment();   
+		    	nAsig.setArguments(args);
+		    	nAsig.show(fm, "edit_eval"); 
+			
 	  }  
+	  
+	
+		 /*     imgButton = (ImageButton)rootView.findViewById(R.id.imageButtonDelete);
+			  imgButton.setOnClickListener(new OnClickListener() {
+				  @Override
+				  public void onClick(View view) {
+					  final int position = getListView().getPositionForView(view);
+					    if (position != ListView.INVALID_POSITION) {
+					        //DO THE STUFF YOU WANT TO DO WITH THE position
+					    	HashMap<String, String> hm = new HashMap<String,String>();
+							hm = aList.get(position);
+							String nombre = hm.get("nombre");
+							String estado = hm.get("nombre");
+							String nota = hm.get("nombre");
+							String porcentaje = hm.get("nombre");
+							
+					    }
+			 
+				  }
+			  
+			  });
+			return super.getView();*/
+		
 }

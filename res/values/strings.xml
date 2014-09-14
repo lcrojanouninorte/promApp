@@ -63,6 +63,9 @@
     <string name="text_title_nueva_eval">Añadir Nueva Evaluación</string>
     <string name="text_nota_requerida">Nota Requerida</string>
     <string name="text_nota_simulada">Nota Simulada</string>
+    <string name="estado_en_progreso">En Progreso</string>
+    <string name="estado_finalizado">Finalizado</string>
+    <string name="text_title_edit_eval">Editar Evaluación</string>
    
  
 

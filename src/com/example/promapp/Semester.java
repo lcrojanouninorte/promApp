@@ -67,8 +67,10 @@ public class Semester {
 	}
 
 	public String getEstado() {
-		// TODO Auto-generated method stub
-		return estado;
+		if(this.estado == null){
+			this.estado = "";
+		}
+		return this.estado;
 	}
 	public void setEstado(String estado) {
 

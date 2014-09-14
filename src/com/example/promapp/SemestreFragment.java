@@ -59,10 +59,13 @@ public class SemestreFragment extends Fragment {
 						.setText(""+sem.getDiferencia());
 
 			
+			
 			//toast.setText("cargado");
 			//toast.show();
 		
 		}
+
+		
 		Button button = (Button) rootView.findViewById(R.id.buttonAddNewSubject);
 		button.setOnClickListener(new OnClickListener() {
 			@Override
@@ -81,6 +84,8 @@ public class SemestreFragment extends Fragment {
 		return rootView;
 	}
 	
+
+		
 	 
 
 	

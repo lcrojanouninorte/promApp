@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 public class AsignaturaFragment extends Fragment{
 	EvaluationListFragment evaluaciones;
@@ -27,7 +28,9 @@ public class AsignaturaFragment extends Fragment{
 	String nombre_asignatura;
 	Toast toast;
 	View rootView;
+	String mensaje;
 	Asignatura asig;
+	ToggleButton b ;
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_asignatura, container, false);
@@ -40,6 +43,7 @@ public class AsignaturaFragment extends Fragment{
 	    		 "Datos agregados Correctamente", 
 	    		 Toast.LENGTH_SHORT);
 		asig = ((MainActivity)getActivity()).mHelper.getSubjectByName(id, nombre_asignatura );
+		
 		if(asig != null){
 			double req = ((MainActivity)getActivity()).roundTwoDecimals(asig.getNotaRequerida());
 			((TextView) rootView.findViewById(R.id.editTextChangeRequerido))
@@ -55,14 +59,55 @@ public class AsignaturaFragment extends Fragment{
 				        .setText(""+req);
 			((TextView) rootView.findViewById(R.id.textViewNotaSimulada))
 						.setText(""+asig.getNotaSimulada());
-			((TextView) rootView.findViewById(R.id.textViewDiferencia))
-						.setText(""+asig.getDiferencia());
 			toast.setText(nombre_asignatura);
 			toast.show();
 		}else{
 			toast.setText("Algo anda mal con la db");
 			toast.show();
 		}
+		
+		//// get your ToggleButton
+		 b = (ToggleButton) rootView.findViewById(R.id.toggleButtonFinalizarAsignatura);
+		 if (asig.getEstado().equals("Finalizado")){
+			 b.setChecked(true);
+		 }else{
+			 b.setChecked(false);
+		 }
+		// attach an OnClickListener
+		b.setOnClickListener(new OnClickListener()
+		{
+		    @Override
+		    public void onClick(View v)
+		    {
+		      if( b.isChecked() ){
+		    	  //Finalizar Asignatura
+		    	  toast.setText("Finalizada!");
+		    	  
+		    	mensaje = ((MainActivity)getActivity()).mHelper.finalizarAsignatura(asig);
+		    	if(mensaje.equals("OK")){
+		    		
+		    	}else{
+		    		toast.setText(mensaje);
+		    		b.setChecked(false);
+		    	}
+		    	  
+		      }else{
+		    	  //Todo: recalcular
+		    	  toast.setText("En Curso!");
+		      }
+		      toast.show();
+		    }
+		   
+		});
+		Button button2 = (Button) rootView.findViewById(R.id.buttonSimuladorSemestral);
+		button2.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				SimulatorHelper s = new SimulatorHelper();
+				Evaluation[] evals = ((MainActivity)getActivity()).mHelper.getEvaluations(asig.getID());
+				Evaluation[] evalsSim = s.simularPromedioEvaluaciones(asig, evals);
+			}
+		});
 	
 		Button button = (Button) rootView.findViewById(R.id.buttonAddNewEval);
 		button.setOnClickListener(new OnClickListener() {
