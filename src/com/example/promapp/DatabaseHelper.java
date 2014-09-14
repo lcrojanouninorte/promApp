@@ -1,7 +1,10 @@
 package com.example.promapp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
+import com.example.promapp.R;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -522,6 +525,37 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 		 }
 		 
 		
+	}
+	public List<HashMap<String,String>> getEvaluationsItems(long asignatura_id){
+		List<HashMap<String,String>>   aList = new ArrayList<HashMap<String,String>>();
+		  HashMap<String, String> hm = new HashMap<String,String>();
+		  Cursor cursor = getWritableDatabase().rawQuery(
+			"SELECT "+COLUMN_EVALUATION_NAME+", "+
+		    COLUMN_EVALUATION_NOTA_REQUERIDA +", " +
+		    COLUMN_EVALUATION_PORCENTAJE +", " +
+		    COLUMN_EVALUATION_ESTADO + " FROM " + TABLE_EVALUATIONS + " WHERE " + 
+			COLUMN_EVALUATION_SUBJECT_ID + " = " + asignatura_id + "", null);
+			if(cursor.getCount()>0){
+				hm = new HashMap<String,String>();
+			    int i = 0;
+				while(cursor.moveToNext()){
+					 hm = new HashMap<String,String>();
+					    hm.put("nombre", "" + cursor.getString(0).toUpperCase());
+				        hm.put("nota", "Prom. Requerido: " + cursor.getString(1));
+				        hm.put("porcentaje", "" + cursor.getString(2).toUpperCase());
+				        if(cursor.getString(3) == "Finalizado"){
+				        	hm.put("estado", ""+R.drawable.finalizado);
+				        }else{
+				        	hm.put("estado", "" + R.drawable.enprogreso);
+				        }
+				    aList.add(hm);
+					i = i+1;
+				}
+				return aList;
+			}else{
+				return null;
+			}
+
 	}
 	public void setPromDeseadoRequeridoEvaluaciones(String stud_id, String prom) {
 		SQLiteDatabase db = this.getWritableDatabase();

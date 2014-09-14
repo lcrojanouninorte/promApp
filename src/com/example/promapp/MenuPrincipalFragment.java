@@ -121,16 +121,7 @@ public class MenuPrincipalFragment extends Fragment {
 				
 			}
 		});
-		Button buttonHistoria = ((Button) rootView.findViewById(R.id.buttonHistoria));
-		buttonHistoria.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Log.d(TAG, "Mostrar historia");
-				int val;
-				Bundle args = new Bundle();
-				//((MainActivity)getActivity()).showHistoria();
-			}
-		});
+		
 	   mHelper.closeDB();
 	    
 		return rootView;
