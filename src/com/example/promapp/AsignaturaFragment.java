@@ -1,5 +1,6 @@
 package com.example.promapp;
 
+import android.R.string;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -31,10 +33,12 @@ public class AsignaturaFragment extends Fragment{
 	String mensaje;
 	Asignatura asig;
 	ToggleButton b ;
+	EditText textSim;
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_asignatura, container, false);
 		args = getArguments();
+		textSim = (EditText)rootView.findViewById(R.id.editTextChangeRequerido);
 		nombre_asignatura = getArguments().getString("nombre_asignatura");
 		String sem_id = ((MainActivity) getActivity()).getPreferences("semester_id");
 		long id = Long.parseLong(sem_id);
@@ -59,6 +63,7 @@ public class AsignaturaFragment extends Fragment{
 				        .setText(""+req);
 			((TextView) rootView.findViewById(R.id.textViewNotaSimulada))
 						.setText(""+asig.getNotaSimulada());
+			((MainActivity)getActivity()).setPreferences("asig_id", asig.getID()+"");
 			toast.setText(nombre_asignatura);
 			toast.show();
 		}else{
@@ -102,10 +107,33 @@ public class AsignaturaFragment extends Fragment{
 		Button button2 = (Button) rootView.findViewById(R.id.buttonSimuladorSemestral);
 		button2.setOnClickListener(new OnClickListener() {
 			@Override
+
 			public void onClick(View v) {
+				
+				//TODO: recalcular cuanto necesita sacar en las asignaturas que estan no finalizadas.
+				String a_id = ((MainActivity)getActivity()).getPreferences("asig_id");
+		       
+		        String not = textSim.getText().toString();
 				SimulatorHelper s = new SimulatorHelper();
-				Evaluation[] evals = ((MainActivity)getActivity()).mHelper.getEvaluations(asig.getID());
-				Evaluation[] evalsSim = s.simularPromedioEvaluaciones(asig, evals);
+				if(asig.setNotaRequerida(not)){
+				
+					Evaluation[] evals = ((MainActivity)getActivity()).mHelper.getEvaluations(asig.getID());
+					Evaluation[] evalSim = s.simularPromedioEvaluaciones(asig, evals,asig.getNotaRequerida() );
+					
+					//actualizar visualmente
+					if(evalSim!=null){
+						for (Evaluation eva : evalSim) {
+							((MainActivity)getActivity()).mHelper.updateEvaluacionesByID(eva);
+						}
+						((MainActivity)getActivity()).reloadFragment("asignatura");
+						toast.setText("Simulado con éxito!");
+						toast.show();
+					}else{
+						textSim.setError("no es posible");
+					}
+				}else{
+					textSim.setError("Dato no valido");
+				}
 			}
 		});
 	

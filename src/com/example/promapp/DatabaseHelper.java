@@ -449,19 +449,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 
 		
 	}
-	public void  updatePromRequeridoEvaluaciones(Evaluation[] evals){
-		SQLiteDatabase db = this.getWritableDatabase();
-		if(evals != null){
-		for (Evaluation eval: evals) {
-			 ContentValues data=new ContentValues();
-			 data = new ContentValues();
-			 data.put(COLUMN_EVALUATION_NOTA_REQUERIDA,eval.getNota_requerida());
-			 data.put(COLUMN_EVALUATION_ESTADO,"En Progreso");
-			 db.update(TABLE_EVALUATIONS, data,COLUMN_ID + " = " + eval.getID(), null);
-		}
-		}
-		
-	}
+
 
 	public String setNotaRequeridaAsignaturas(Student s, Semester sem, Asignatura[] asignaturas) {
 		//Se compara la diferencia de puntos del semestre normal, y la nota simulada 
@@ -537,7 +525,8 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 			"SELECT "+COLUMN_EVALUATION_NAME+", "+
 		    COLUMN_EVALUATION_NOTA_REQUERIDA +", " +
 		    COLUMN_EVALUATION_PORCENTAJE +", " +
-		    COLUMN_EVALUATION_ESTADO + " FROM " + TABLE_EVALUATIONS + " WHERE " + 
+		    COLUMN_EVALUATION_ESTADO + ", " +
+		    COLUMN_ID+" " + " FROM " + TABLE_EVALUATIONS + " WHERE " + 
 			COLUMN_EVALUATION_SUBJECT_ID + " = " + asignatura_id + "", null);
 			if(cursor.getCount()>0){
 				hm = new HashMap<String,String>();
@@ -560,7 +549,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 				    	   hm.put("img", "" + R.drawable.enprogreso);
 				    	   hm.put("estado", "" + "Estado: En Progreso!");
 				       }
-
+				       hm.put("id_eval", "" + cursor.getString(4));
 				    aList.add(hm);
 					i = i+1;
 				}
@@ -704,7 +693,12 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 				 Evaluation ev = getEvaluationByName(asig_id, nomEval);
 				 ContentValues data=new ContentValues();
 				 data = new ContentValues();
-				 data.put(COLUMN_EVALUATION_NOTA_REAL,eval.getNota_real());
+				 if(eval.getEstado().equals("Finalizado")){
+					 data.put(COLUMN_EVALUATION_NOTA_REAL,eval.getNota_requerida());				 
+				 }else{
+					 data.put(COLUMN_EVALUATION_NOTA_REAL,eval.getNota_real());
+				 }
+				
 				 data.put(COLUMN_EVALUATION_NOTA_REQUERIDA,eval.getNota_requerida());
 				 data.put(COLUMN_EVALUATION_NOTA_SIMULADA,eval.getNota_simulada());
 				 data.put(COLUMN_EVALUATION_ESTADO,eval.getEstado());
@@ -713,6 +707,44 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 				 db.update(TABLE_EVALUATIONS, data,COLUMN_ID + " = " + ev.getID(), null);
 
 		return true;
+	}
+	public boolean   updateEvaluacionesByID(Evaluation eval){
+		SQLiteDatabase db = this.getWritableDatabase();
+
+			     
+		
+				 ContentValues data=new ContentValues();
+				 data = new ContentValues();
+				 if(eval.getEstado().equals("Finalizado")){
+					 data.put(COLUMN_EVALUATION_NOTA_REAL,eval.getNota_requerida());
+				 }else{
+					 data.put(COLUMN_EVALUATION_NOTA_REAL,eval.getNota_real());
+				 }
+				 data.put(COLUMN_EVALUATION_NOTA_REAL,eval.getNota_real());
+				 data.put(COLUMN_EVALUATION_NOTA_REQUERIDA,eval.getNota_requerida());
+				 data.put(COLUMN_EVALUATION_NOTA_SIMULADA,eval.getNota_simulada());
+				 data.put(COLUMN_EVALUATION_ESTADO,eval.getEstado());
+				 data.put(COLUMN_EVALUATION_NAME,eval.getNombre());
+				 data.put(COLUMN_EVALUATION_PORCENTAJE,eval.getPorcentaje());
+				 db.update(TABLE_EVALUATIONS, data,COLUMN_ID + " = " + eval.getID(), null);
+
+		return true;
+	}
+	
+	
+	
+	public void  updatePromRequeridoEvaluaciones(Evaluation[] evals){
+		SQLiteDatabase db = this.getWritableDatabase();
+		if(evals != null){
+		for (Evaluation eval: evals) {
+			 ContentValues data=new ContentValues();
+			 data = new ContentValues();
+			 data.put(COLUMN_EVALUATION_NOTA_REQUERIDA,eval.getNota_requerida());
+			 data.put(COLUMN_EVALUATION_ESTADO,"En Progreso");
+			 db.update(TABLE_EVALUATIONS, data,COLUMN_ID + " = " + eval.getID(), null);
+		}
+		}
+		
 	}
 
 

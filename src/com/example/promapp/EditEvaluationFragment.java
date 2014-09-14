@@ -19,6 +19,7 @@ public class EditEvaluationFragment extends DialogFragment {
 	Evaluation eval;
 	private Toast toast;
 	 EditText nombre;
+	 TextView ideva;
 	 EditText nota;
 	 EditText porcentaje;
 	 ToggleButton estado;
@@ -26,6 +27,7 @@ public class EditEvaluationFragment extends DialogFragment {
 	Bundle args;
 	TextView title;
 	String nombre_evaluacion;
+	String eva_id;
 	 long asig_id;
 	@Override   
 	 public void onCreate(Bundle savedInstanceState) {       
@@ -39,12 +41,14 @@ public class EditEvaluationFragment extends DialogFragment {
 		// ((MainActivity)getActivity()).mHelper.getEvaluationByName(asig_id, eval_name);
 		 
 		 asig_id = getArguments().getLong("asignatura_id");
+		 eva_id = getArguments().getString("id_eval");
 		 ((MainActivity)getActivity()).setPreferences("asignatura_id", asig_id+"");
 		 nombre_evaluacion = getArguments().getString("nombre_eval");
 		 ((MainActivity)getActivity()).setPreferences("nombre_eval_old", nombre_evaluacion+"");
 		 vi = getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_edit_evaluation, null); 
 		 title = (TextView)vi.findViewById(R.id.textViewTitle);
-		 
+		 ideva = (TextView) vi.findViewById(R.id.id_eval);
+		 ideva.setText(eva_id);
 		 title.setText(getArguments().getString("nombre_eval"));
 		 img = (ImageView) vi.findViewById(R.id.imageEstado);
 		 img.setImageResource(getArguments().getInt("img"));
@@ -93,6 +97,7 @@ public class EditEvaluationFragment extends DialogFragment {
 	                     @Override
 	                     public void onClick(View v)
 	                     {
+	                    	
 	                    	 if(!insertEval(vi)){    
 	                    		 toast.setText("Verifica los mensajes de error");
 	                    	 }else{
@@ -112,13 +117,20 @@ public class EditEvaluationFragment extends DialogFragment {
 		private boolean insertEval(View v){
 			//obtener los views y sus datos
 			//Estudiante
+			
 			 boolean go = true;
+			 String a = ((MainActivity)getActivity()).getPreferences("asignatura_id");
+			 asig_id = Long.parseLong(a);
+
+			   	
 			 
 			 Evaluation e = new Evaluation();
 		   	 String nom = nombre.getText().toString();
 		   	 String not = nota.getText().toString();
 		     String porcent = porcentaje.getText().toString();
 		   	 String est = estado.getText().toString();
+		   	 String id_evaluacion = ideva.getText().toString();
+	
 
 		   	 if(!e.setPorcentaje(porcent)){
 		   		 porcentaje.setError("Ingrese un porcentaje valido");
@@ -164,10 +176,12 @@ public class EditEvaluationFragment extends DialogFragment {
 			   	e.setAsignaturaID(asig_id);
 		   	    DatabaseHelper mHelper =  ((MainActivity)getActivity()).mHelper;
 		   
-		   	 String a = ((MainActivity)getActivity()).getPreferences("asignatura_id");
-		   	    asig_id = Long.parseLong(a);
-		   	    nombre_evaluacion = ((MainActivity)getActivity()).getPreferences("nombre_eval_old");
-				if(!mHelper.updateEvaluacionesByName(nombre_evaluacion,e, asig_id)){
+		   	
+		   	   
+		   	    long id_eva = Long.parseLong(id_evaluacion);
+		   	    e.setID(id_eva);
+		   	    e.setNombre(nombre_evaluacion);
+				if(!mHelper.updateEvaluacionesByID(e)){
 					go = false;
 					toast.setText("Error al Ingresar Datos");
                   	toast.show();
@@ -177,6 +191,7 @@ public class EditEvaluationFragment extends DialogFragment {
 
 				}
 			}
+			   	 
 		   	((MainActivity)getActivity()).mHelper.closeDB();
 			return go;
 		}

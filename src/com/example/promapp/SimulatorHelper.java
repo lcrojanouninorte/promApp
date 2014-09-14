@@ -153,7 +153,7 @@ public class SimulatorHelper {
 		 return puntos;
 	}
 	
-	public Evaluation[] simularPromedioEvaluaciones(Asignatura asig, Evaluation[] evals) {
+	public Evaluation[] simularPromedioEvaluaciones(Asignatura asig, Evaluation[] evals, float deseado) {
 //getPuntosObtenidosAsignatura(asignaturas);
 		//obtener creidotos a excluir, es decir las asignaturas finalizadas
 		int porcentajesExcluidos = 0;
@@ -164,7 +164,8 @@ public class SimulatorHelper {
 		
 		//Calcular promedio con la actual configuracion de notas
 		float promObtenido = gerPromObtenidoEvals(evals);
-		/*for (Evaluation eval : evals) {
+		float dif = deseado - promObtenido;
+		for (Evaluation eval : evals) {
 			if (eval.getEstado().equals("Finalizado")){
 				porcentajesExcluidos = porcentajesExcluidos + eval.getPorcentaje(); //porcion que le toca de la diferencia;
 				
@@ -175,9 +176,9 @@ public class SimulatorHelper {
 			if (!eval.getEstado().equals("Finalizado")){
 				if(notaSimulada == -1){
 					//calcular la notaSimulada si no se ha hecho
-					puntos = (float)eval.getNota_simulada()*eval.getPorcentaje();
-					porcion = (float)(eval.getPorcentaje()/porcentajesUsables)*dif; //porcion que le toca de la diferencia;
-					notaSimulada = (puntos+porcion)/eval.getPorcentaje();
+					puntos = (float)eval.getNota_requerida()*((float)eval.getPorcentaje()/100);
+					porcion = (float)(eval.getPorcentaje()/((float)porcentajesUsables/100))*dif; //porcion que le toca de la diferencia;
+					notaSimulada = (puntos+porcion)/((float)eval.getPorcentaje()/100);
 					if(!(notaSimulada <= 5)){
 						//si no es menor de 5 no es posible ese prom deseado
 						return null;
@@ -188,7 +189,7 @@ public class SimulatorHelper {
 				}
 			}
 			
-		}*/
+		}
 		return evals;
 	}
 
@@ -196,7 +197,7 @@ public class SimulatorHelper {
 		float prom = 0;
 		float p = 0;
 	 for (Evaluation eval: evals) {
-		p = eval.getNota_simulada()*eval.getPorcentaje();
+		p = eval.getNota_requerida()*((float)eval.getPorcentaje()/100);
 		prom = prom + p;
 	}
 		return prom;

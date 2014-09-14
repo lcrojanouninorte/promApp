@@ -43,9 +43,9 @@ public class EvaluationListFragment extends ListFragment {
 		 // String[] evaluaciones = ((MainActivity) getActivity()).mHelper.getEvaluacionesNames(asignatura_id);
 		  if( aList  != null){
 			  //text = evaluaciones;
-			  String[] from = { "nombre","nota","porcentaje","estado","img"};
+			  String[] from = { "nombre","nota","porcentaje","estado","img","id_eval"};
 	          // Ids of views in listview_layout
-	          int[] to = { R.id.nombre,R.id.nota,R.id.porcentaje,R.id.estado, R.id.img};
+	          int[] to = { R.id.nombre,R.id.nota,R.id.porcentaje,R.id.estado, R.id.img, R.id.id_eval};
 
 	      // Instantiating an adapter to store each items
 	      // R.layout.listview_layout defines the layout of each item
@@ -91,6 +91,7 @@ public class EvaluationListFragment extends ListFragment {
 			val =hm.get("porcentaje").replace("%","");
 			val = val.replace("Porcentaje: ", "");
 			String porcentaje = val;
+			String ideval = hm.get("id_eval");
 			
 			 imgButton = (ImageButton)v.findViewById(R.id.imageButtonDelete);
 			 
@@ -101,6 +102,7 @@ public class EvaluationListFragment extends ListFragment {
 			args.putString("nota", nota);
 			args.putString("porcentaje", porcentaje);
 			args.putString("img", img);
+			args.putString("id_eval", ideval);
 			
 				FragmentManager fm = getActivity().getSupportFragmentManager(); 
 		    	EditEvaluationFragment nAsig = new EditEvaluationFragment();   
