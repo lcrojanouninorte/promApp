@@ -164,7 +164,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 		
 
 	}
-	 public long insertStudent(Student student) {        
+	 public long insertStudentFirsTime(Student student) {        
 		 ContentValues cv = new ContentValues();        
 		 cv.put(COLUMN_STUDENT_NAME, student.getNombre());
 		 cv.put(COLUMN_STUDENT_PROM_ACUM, student.getPromAcum());
@@ -188,7 +188,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 	
 	public long insertSubject(Asignatura asignatura, long semester) {
 		 ContentValues cv = new ContentValues();        
-		 cv.put(COLUMN_SUBJECT_NAME, asignatura.getNombre());
+		 cv.put(COLUMN_SUBJECT_NAME, asignatura.getNombre().toLowerCase());
 		 cv.put(COLUMN_SUBJECT_CREDITOS, asignatura.getCreditos());
 		 cv.put(COLUMN_SUBJECT_ESTADO, asignatura.getEstado());
 		 cv.put(COLUMN_SUBJECT_NOTA_REQUERIDA, asignatura.getNotaRequerida());
@@ -200,7 +200,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 	}
 	public long insertEvaluation(Evaluation e) {
 		 ContentValues cv = new ContentValues();        
-		 cv.put(COLUMN_EVALUATION_NAME, e.getNombre());
+		 cv.put(COLUMN_EVALUATION_NAME, e.getNombre().toLowerCase());
 		 cv.put(COLUMN_EVALUATION_PORCENTAJE, e.getPorcentaje());
 		 cv.put(COLUMN_EVALUATION_ESTADO, e.getEstado());
 		 cv.put(COLUMN_EVALUATION_NOTA_REQUERIDA, e.getNota_requerida());
@@ -391,6 +391,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 	    sHelper = new SimulatorHelper();
 		ContentValues data=new ContentValues();
 		float semProm = sHelper.getPromRequeridoSemestral(s.getCredCursados(), sem.getCreditos(), promDeseado, s.getPromAcum());
+		
 		if(semProm <=5 && semProm>0){
 			 //actualizar el promedio necesitado en las asignaturas}
 			s.setPromAcumDeseado(promDeseado);
@@ -423,7 +424,12 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 			}
 		
 		}else{
-			return "Ese promedio no es alcanzable";
+			if(semProm == Float.POSITIVE_INFINITY){
+				//esto pasaria si no se han ingresado asignaturas
+				return "Ingresa por lo menos una antes de simular";
+			}else{
+				return "Ese promedio no es alcanzable";
+			}
 		}
 		
 	}
@@ -677,7 +683,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 				 data.put(COLUMN_EVALUATION_NOTA_REQUERIDA,eval.getNota_requerida());
 				 data.put(COLUMN_EVALUATION_NOTA_SIMULADA,eval.getNota_simulada());
 				 data.put(COLUMN_EVALUATION_ESTADO,eval.getEstado());
-				 data.put(COLUMN_EVALUATION_NAME,eval.getNombre());
+				 data.put(COLUMN_EVALUATION_NAME,eval.getNombre().toLowerCase());
 				 data.put(COLUMN_EVALUATION_PORCENTAJE,eval.getPorcentaje());
 				 db.update(TABLE_EVALUATIONS, data,COLUMN_ID + " = " + eval.getID(), null);
 			}
@@ -702,7 +708,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 				 data.put(COLUMN_EVALUATION_NOTA_REQUERIDA,eval.getNota_requerida());
 				 data.put(COLUMN_EVALUATION_NOTA_SIMULADA,eval.getNota_simulada());
 				 data.put(COLUMN_EVALUATION_ESTADO,eval.getEstado());
-				 data.put(COLUMN_EVALUATION_NAME,eval.getNombre());
+				 data.put(COLUMN_EVALUATION_NAME,eval.getNombre().toLowerCase());
 				 data.put(COLUMN_EVALUATION_PORCENTAJE,eval.getPorcentaje());
 				 db.update(TABLE_EVALUATIONS, data,COLUMN_ID + " = " + ev.getID(), null);
 
@@ -724,7 +730,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 				 data.put(COLUMN_EVALUATION_NOTA_REQUERIDA,eval.getNota_requerida());
 				 data.put(COLUMN_EVALUATION_NOTA_SIMULADA,eval.getNota_simulada());
 				 data.put(COLUMN_EVALUATION_ESTADO,eval.getEstado());
-				 data.put(COLUMN_EVALUATION_NAME,eval.getNombre());
+				 data.put(COLUMN_EVALUATION_NAME,eval.getNombre().toLowerCase());
 				 data.put(COLUMN_EVALUATION_PORCENTAJE,eval.getPorcentaje());
 				 db.update(TABLE_EVALUATIONS, data,COLUMN_ID + " = " + eval.getID(), null);
 
@@ -745,6 +751,86 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 		}
 		}
 		
+	}
+	public List<HashMap<String, Object>> getSubjectItems(long sem_id) {
+		List<HashMap<String,Object>>   aList = new ArrayList<HashMap<String,Object>>();
+		  HashMap<String, Object> hm = new HashMap<String,Object>();
+		  Cursor cursor = getWritableDatabase().rawQuery(
+			"SELECT "+COLUMN_SUBJECT_NAME+", "+
+		    COLUMN_SUBJECT_NOTA_REQUERIDA +", " +
+		    COLUMN_SUBJECT_NOTA_REAL+", " +
+		    COLUMN_SUBJECT_CREDITOS+", " +
+		    COLUMN_SUBJECT_ESTADO + ", " +
+		    COLUMN_ID+" " + " FROM " + TABLE_SUBJECTS+ " WHERE " + 
+			COLUMN_SUBJECT_SEMESTER_ID + " = " + sem_id + "", null);
+			if(cursor.getCount()>0){
+				hm = new HashMap<String,Object>();
+			    int i = 0;
+				while(cursor.moveToNext()){
+					 hm = new HashMap<String,Object>();
+					    hm.put("nombre", "" + cursor.getString(0).toUpperCase());
+				        hm.put("nota_deseada", "Nota Requerida: " + cursor.getString(1));
+				        hm.put("creditos", "Creditos: "+ cursor.getString(3) + "");
+				        hm.put("nota_real", "" + cursor.getString(2) );
+				       String a = cursor.getString(4);
+				       if(a != null){
+					        if(a.equals("Finalizado")){
+					        	hm.put("img", ""+R.drawable.estado_finalizado);
+					        	hm.put("estado", "Estado: Finalizado!");
+					        	hm.put("toggle_estado", true);
+					        }else{
+					        	hm.put("img", "" + R.drawable.estado_progreso);
+					        	hm.put("estado", "Estado: En Progreso!");
+					        	hm.put("toggle_estado", false);
+					        }
+				       }else{
+				    	   hm.put("img", "" + R.drawable.estado_progreso);
+				    	   hm.put("estado", "" + "Estado: En Progreso!");
+				    	   hm.put("toggle_estado", false);
+				       }
+				       hm.put("id_asignatura", "" + cursor.getString(5));
+				    aList.add(hm);
+					i = i+1;
+				}
+				return aList;
+			}else{
+				return null;
+			}
+	}
+	public boolean subjectNameExist(String nombre, String sem_id) {
+		Cursor cursor = getWritableDatabase().rawQuery(
+				"SELECT "+COLUMN_SUBJECT_NAME+" FROM " + TABLE_SUBJECTS + " WHERE " + 
+		         COLUMN_SUBJECT_NAME + " = '" + nombre + "' AND " +
+	             COLUMN_SUBJECT_SEMESTER_ID + " = " + sem_id+ "", null);	    
+			if(cursor.moveToFirst())
+			{
+				return true; 
+			}else{
+				return false;
+			}
+		
+	}
+	public Asignatura getSubjectByID(long id_asignatura) {
+		Cursor cursor = getWritableDatabase().rawQuery(
+				"SELECT * FROM " + TABLE_SUBJECTS + " WHERE " + 
+				COLUMN_ID+ " = " +  id_asignatura +"" , null);
+			Asignatura s;
+			if(cursor.moveToFirst()){
+				s = new Asignatura();
+				s.setID(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));
+				s.setNombre(cursor.getString(cursor.getColumnIndex(COLUMN_SUBJECT_NAME)));
+				s.setCreditos(cursor.getString(cursor.getColumnIndex(COLUMN_SUBJECT_CREDITOS)));
+				s.setEstado(cursor.getString(cursor.getColumnIndex(COLUMN_SUBJECT_ESTADO)));
+				s.setNotaRequerida(cursor.getString(cursor.getColumnIndex(COLUMN_SUBJECT_NOTA_REQUERIDA)));
+				s.setNotaReal(cursor.getString(cursor.getColumnIndex(COLUMN_SUBJECT_NOTA_REAL)));
+				s.setNota_simulada(cursor.getString(cursor.getColumnIndex(COLUMN_SUBJECT_NOTA_SIMULADA)));
+				s.setSemestreID(cursor.getLong(cursor.getColumnIndex(COLUMN_SUBJECT_SEMESTER_ID)));
+				
+				return s;
+			}else{
+				return null;
+			}
+
 	}
 
 

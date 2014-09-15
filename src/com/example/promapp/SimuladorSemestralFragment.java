@@ -1,10 +1,6 @@
 package com.example.promapp;
 
-import java.io.ObjectOutputStream.PutField;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -60,9 +56,9 @@ EditText creditosCursados;
 		sem = helper.getSemester(stud.getID());
 		
 		if(sem != null && stud!=null){
-			((MainActivity) getActivity()).setPreferences("estudiante_id", stud.getID()+"");
+			((MainActivity) getActivity()).setPreferences("stud_id", stud.getID()+"");
 			
-
+			//TODO: mostrar promedio real hasta ahora
 				promDeseado.setText(""+stud.getPromAcumDeseado());
 				double req = ((MainActivity)getActivity()).roundTwoDecimals(sem.getPromRequerido());
 				promRequerido.setText(""+req);
@@ -80,12 +76,13 @@ EditText creditosCursados;
 						+ " y " + maxDeseado + " Para " + sem.getCreditos() + " Creditos.");
 				
 			}else{		
-				float maxDeseado = ((MainActivity)getActivity()).simHelper.getMaxDeseado
+				maxDeseado = ((MainActivity)getActivity()).simHelper.getMaxDeseado
 						  (stud.getPromAcum(), stud.getPromAcumDeseado(), stud.getCredCursados(),15);
 				((MainActivity) getActivity()).setPreferences("maxDeseado", maxDeseado+"");
-				reco.setText("Te recomiendo un promedio deseado entre " + stud.getPromAcum()
-						+ " y " + maxDeseado + " Si Tomarás más de 15 Creditos.");
+				reco.setText("Recomendación: Este semestre puedes obtener un acumulado entre " + stud.getPromAcum()
+						+ " y " + maxDeseado + " Si Toma más de 15 Creditos.");
 			}  
+			
 			
 		}else{
 			toast.setText("No hay usuario creado");
@@ -101,10 +98,12 @@ EditText creditosCursados;
 					//TODO: verificar que sea menor que el promedio maximo
 					if(!prom.isEmpty()){
 						float ndeseado = Float.parseFloat(prom);
+						String max = ((MainActivity) getActivity()).getPreferences("maxDeseado");
+						maxDeseado = Float.parseFloat(max);
 						if(ndeseado<=maxDeseado){
 							String mensaje = ((MainActivity) getActivity()).mHelper.setPromDeseadoAcumulado(stud, sem, ndeseado);
 							if(mensaje != "OK"){
-								 promDeseado.setError("Estas en limites imposibles, Utiliza el rango sugerido!");
+								 promDeseado.setError(mensaje);
 							}else{
 								((MainActivity) getActivity()).reloadFragment("semestre");
 								toast.setText(mensaje);

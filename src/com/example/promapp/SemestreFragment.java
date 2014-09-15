@@ -40,29 +40,40 @@ public class SemestreFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater,@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_semestre, container, false);
-		Student stud = ((MainActivity)getActivity()).mHelper.getStudent();
+		Student stud = ((MainActivity)getActivity()).mHelper.getStudent(); 
+		//TODO: Cargar el estudiante logueado
+		//TODO: mostrar promedio obtenido hasta el momento
 		if(stud!= null){
-			((MainActivity) getActivity()).setPreferences("student_id", stud.getID()+"");
+			((MainActivity) getActivity()).setPreferences("stud_id", stud.getID()+"");
 			Semester sem = ((MainActivity)getActivity()).mHelper.getSemester(stud.getID());
 			((MainActivity) getActivity()).setPreferences("semester_id", sem.getID()+"");
 			toast = new Toast(getActivity());
 			((TextView) rootView.findViewById(R.id.textViewSemestre))
-	        .setText(sem.getSemestre()+" Semestre");
+						.setText(sem.getSemestre()+" Semestre");
             ((TextView) rootView.findViewById(R.id.textViewCreditosMatriculados))
-	        .setText("Creditos Matriculados: "+sem.getCreditos());
+	        			.setText("Creditos Matriculados: "+sem.getCreditos());
             double req = ((MainActivity)getActivity()).roundTwoDecimals(sem.getPromRequerido());
 			((TextView) rootView.findViewById(R.id.textViewPromedioRequerido))
 				        .setText(""+req);
-			((TextView) rootView.findViewById(R.id.textViewPromedioSimulado))
-						.setText(""+sem.getPromSimulado());
-			((TextView) rootView.findViewById(R.id.textViewDiferencia))
-						.setText(""+sem.getDiferencia());
+            if(sem.getPromSimulado()==0){
+    			((TextView) rootView.findViewById(R.id.textViewPromedioSimulado))
+				.setText("Aún no ha simulado!");
+            }else{
+    			((TextView) rootView.findViewById(R.id.textViewPromedioSimulado))
+				.setText(""+sem.getPromSimulado());
+            }
+
 
 			
 			
 			//toast.setText("cargado");
 			//toast.show();
 		
+		}else{
+			//si no hay estudiante, volver a la pantalla de crear estudiante
+        	FragmentManager fm = getActivity().getSupportFragmentManager(); 
+	    	FirstTimeFragment nAsig = new FirstTimeFragment();                
+	    	nAsig.show(fm, "FirstTime"); 
 		}
 
 		
@@ -72,7 +83,7 @@ public class SemestreFragment extends Fragment {
 			public void onClick(View v) {
 				 FragmentManager fm = getActivity().getSupportFragmentManager(); 
 		    	 AddAsignaturaFragment nAsig = new AddAsignaturaFragment();                
-		    	 nAsig.show(fm, "nueva_Asignatura"); 
+		    	 nAsig.show(fm, "nueva_asignatura"); 
 			}
 		});
 		simulador = new SimuladorSemestralFragment();

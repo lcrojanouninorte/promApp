@@ -1,5 +1,6 @@
 package com.example.promapp;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 
 import android.util.Log;
@@ -14,24 +15,28 @@ public class SimulatorHelper {
 		//Si el promedio requerido del semestre es mayor que 5, recomiendo bajar el desead acumulado
 		if(requerido>maxPromSemestre){
 			do{
-				promDeseado = (float) (promDeseado - 0.01);
+				promDeseado = (float) (promDeseado - 0.001);
 				requerido = (promDeseado*(credCursados + maxCred) - (promAcum*credCursados))/maxCred;
 			}while(requerido>maxPromSemestre);
 		}else{
 			do{
-				promDeseado = (float) (promDeseado + 0.01);
-			
+				promDeseado = (float) (promDeseado + 0.001);
 				requerido = (promDeseado*(credCursados + maxCred) - (promAcum*credCursados))/maxCred;
-			}while(requerido<5);
-			promDeseado = (float) (promDeseado - 0.01);
+			}while(requerido<=maxPromSemestre);
+			promDeseado = (float) (promDeseado - 0.001);
 		}
 		long endTime = System.currentTimeMillis();
 		long consumedTime = endTime-startTime;
 		Log.d("max", consumedTime+"");
-		return promDeseado;
+		
+		return (float) roundTwoDecimals(promDeseado);
 		
 	}
-
+	double roundTwoDecimals(double d)
+	{
+	    DecimalFormat twoDForm = new DecimalFormat("#.##");
+	    return Double.valueOf(twoDForm.format(d));
+	}
 	public float getPromRequeridoSemestral(int CC, int CM, float PD,float PA) {
 		float PS = 0;
 		PS = (PD*(CC+CM)-(CC*PA))/CM;
@@ -177,7 +182,7 @@ public class SimulatorHelper {
 				if(notaSimulada == -1){
 					//calcular la notaSimulada si no se ha hecho
 					puntos = (float)eval.getNota_requerida()*((float)eval.getPorcentaje()/100);
-					porcion = (float)(eval.getPorcentaje()/((float)porcentajesUsables/100))*dif; //porcion que le toca de la diferencia;
+					porcion = (float)(((float)eval.getPorcentaje()/100)/((float)porcentajesUsables/100))*dif; //porcion que le toca de la diferencia;
 					notaSimulada = (puntos+porcion)/((float)eval.getPorcentaje()/100);
 					if(!(notaSimulada <= 5)){
 						//si no es menor de 5 no es posible ese prom deseado

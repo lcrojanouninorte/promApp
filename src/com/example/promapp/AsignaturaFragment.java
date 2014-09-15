@@ -28,6 +28,7 @@ public class AsignaturaFragment extends Fragment{
 		
 	}
 	String nombre_asignatura;
+	String id_asig;
 	Toast toast;
 	View rootView;
 	String mensaje;
@@ -39,15 +40,14 @@ public class AsignaturaFragment extends Fragment{
 		rootView = inflater.inflate(R.layout.fragment_asignatura, container, false);
 		args = getArguments();
 		textSim = (EditText)rootView.findViewById(R.id.editTextChangeRequerido);
-		nombre_asignatura = getArguments().getString("nombre_asignatura");
+		id_asig = getArguments().getString("id_asignatura");
 		String sem_id = ((MainActivity) getActivity()).getPreferences("semester_id");
-		long id = Long.parseLong(sem_id);
-		
+		long id_sem = Long.parseLong(sem_id);
+		long id_asignatura = Long.parseLong(id_asig);
 		toast =  Toast.makeText(getActivity().getApplicationContext(),
 	    		 "Datos agregados Correctamente", 
 	    		 Toast.LENGTH_SHORT);
-		asig = ((MainActivity)getActivity()).mHelper.getSubjectByName(id, nombre_asignatura );
-		
+		asig = ((MainActivity)getActivity()).mHelper.getSubjectByID(id_asignatura);
 		if(asig != null){
 			double req = ((MainActivity)getActivity()).roundTwoDecimals(asig.getNotaRequerida());
 			((TextView) rootView.findViewById(R.id.editTextChangeRequerido))
@@ -111,13 +111,19 @@ public class AsignaturaFragment extends Fragment{
 			public void onClick(View v) {
 				
 				//TODO: recalcular cuanto necesita sacar en las asignaturas que estan no finalizadas.
-				String a_id = ((MainActivity)getActivity()).getPreferences("asig_id");
+				long a_id = asig.getID();
 		       
 		        String not = textSim.getText().toString();
 				SimulatorHelper s = new SimulatorHelper();
 				if(asig.setNotaRequerida(not)){
-				
+
 					Evaluation[] evals = ((MainActivity)getActivity()).mHelper.getEvaluations(asig.getID());
+				    for (Evaluation  eval : evals) {
+						//actualizar la nota deseada
+				    	if(!eval.getEstado().equals("Finalizado")){
+				    		eval.setNota_Requerida(asig.getNotaRequerida());
+				    	}
+					}
 					Evaluation[] evalSim = s.simularPromedioEvaluaciones(asig, evals,asig.getNotaRequerida() );
 					
 					//actualizar visualmente
@@ -129,7 +135,7 @@ public class AsignaturaFragment extends Fragment{
 						toast.setText("Simulado con éxito!");
 						toast.show();
 					}else{
-						textSim.setError("no es posible");
+						textSim.setError("no es posible, quizas sea mejor retirar");
 					}
 				}else{
 					textSim.setError("Dato no valido");

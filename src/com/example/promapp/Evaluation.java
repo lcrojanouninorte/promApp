@@ -1,5 +1,7 @@
 package com.example.promapp;
 
+import java.text.DecimalFormat;
+
 public class Evaluation {
 	private long id;
 	private long asignaturaId;
@@ -73,7 +75,7 @@ public class Evaluation {
 
 	public boolean setNota_simulada(float prom) {
 		if(prom>=0 && prom<=5){
-			this.nota_simulada= prom;
+			this.nota_simulada= roundTwoDecimals(prom);
 		}else{
 			return false;
 		}
@@ -88,7 +90,7 @@ public class Evaluation {
 		if(!nota.isEmpty()){
 			float prom = Float.parseFloat(nota);
 			if(prom>=0 && prom<=5){
-				this.nota_requerida= prom;
+				this.nota_requerida= roundTwoDecimals(prom);
 			}else{
 				return false;
 			}
@@ -100,7 +102,7 @@ public class Evaluation {
 	public boolean setNota_Requerida(float prom) {
 		// TODO Auto-generated method stub
 		if(prom>=0 && prom<=5){
-			this.nota_requerida= prom;
+			this.nota_requerida= roundTwoDecimals(prom);
 		}else{
 			return false;
 		}
@@ -120,7 +122,7 @@ public class Evaluation {
 	}
 	public boolean setNota_real(float prom) {
 		if(prom>=0 && prom<=5){
-			this.nota_real= prom;
+			this.nota_real= roundTwoDecimals(prom);
 		}else{
 			return false;
 		}
@@ -139,6 +141,11 @@ public class Evaluation {
 	}
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+	float roundTwoDecimals(float d)
+	{
+	    DecimalFormat twoDForm = new DecimalFormat("#.#");
+	    return Float.valueOf(twoDForm.format(d));
 	}
 
 }

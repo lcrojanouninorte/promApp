@@ -27,6 +27,9 @@ import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity {
 	private SimuladorSemestralFragment simulador;
+	public Student e;
+	public Semester s;
+	public Evaluation eval;
 	public SharedPreferences prefs ;
 	public static final String MyPREFERENCES = "MyPrefs" ;
 	private AsignaturaFragment asignaturas;
@@ -105,7 +108,12 @@ public class MainActivity extends FragmentActivity {
         		mHelper = new DatabaseHelper(this);
         	}
         	mHelper.clearAll();
-        	reloadFragment("menu_principal");
+            menuPrincipal = new MenuPrincipalFragment();       
+            FragmentManager fm = getSupportFragmentManager();  
+            fm.beginTransaction()        	
+              .add(R.id.container, menuPrincipal, "menu_principal")
+              .addToBackStack(null)
+              .commit();
             return true;
         }
         

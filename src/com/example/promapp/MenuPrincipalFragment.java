@@ -59,22 +59,28 @@ public class MenuPrincipalFragment extends Fragment {
 		toast = Toast.makeText(getActivity().getApplicationContext(),"Bienvenido Nuevamente", Toast.LENGTH_SHORT);
 		DatabaseHelper mHelper =  ((MainActivity)getActivity()).mHelper;
         student = mHelper.getStudent();
+        //TODO: autenticar usuario, ahora solo coje al primero que encuentre
 		  if(student == null){
-			  //Dialog Fragment si es primera ves en la aplicacion
+			  //Dialog Fragment si es primera vez en la aplicacion
 	        	FragmentManager fm = getActivity().getSupportFragmentManager(); 
 		    	FirstTimeFragment nAsig = new FirstTimeFragment();                
 		    	nAsig.show(fm, "FirstTime"); 
 	        }else{
 	        	//actualizar vista 
+				 
 	            ((TextView) rootView.findViewById(R.id.textViewNombreEstudiante))
 	            	        .setText("Nombre: "+student.getNombre());
 	            ((TextView) rootView.findViewById(R.id.textViewPromedioAcum))
             		        .setText("Prom. Acum: "+student.getPromAcum());
 	            ((TextView) rootView.findViewById(R.id.textViewCreditosCursados))
 	            			.setText("Creditos Cursados: "+student.getCredCursados());
+	            double reqsem = ((MainActivity)getActivity()).roundTwoDecimals(student.getPromAcumDeseado());
 	            ((TextView) rootView.findViewById(R.id.textViewPromDeseado))
-            				.setText("Prom. Requerido: "+student.getPromAcumDeseado());
-	            toast.setText("Hola! Bienvenido de nuevo");
+            				.setText("Prom. Requerido: "+reqsem);
+	            ((MainActivity)getActivity()).setPreferences("stud_id", student.getID()+"");
+	            //TODO: investigar si es mejor enviar una instancia del estudiante al main
+	            //O guardar su id como preferencial o enviarlo como argumento
+	            toast.setText("Hola! Bienvenido");
 	            toast.show();
 	        }
 		Button button = (Button) rootView.findViewById(R.id.buttonEditarSemestre);

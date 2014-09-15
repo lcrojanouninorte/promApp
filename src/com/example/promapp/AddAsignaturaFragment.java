@@ -72,10 +72,17 @@ public class AddAsignaturaFragment extends DialogFragment{
 			 //obtener los views y sus datos
 			//Estudiante
 			 boolean go = true;
+			 DatabaseHelper mHelper =  ((MainActivity)getActivity()).mHelper;
+			 String sem_id = ((MainActivity) getActivity()).getPreferences("semester_id");
+			 
 			 Asignatura e = new Asignatura();
 		   	 EditText edit = (EditText)v.findViewById(R.id.editTextNombreAsignatura);
 		   	 String nombre = edit.getText().toString();
 		   	 //TODO:verificar que la asignatura no exista
+		   	 if(mHelper.subjectNameExist(nombre, sem_id)){
+		   		 edit.setError("Una asignatura con ese nombre, ya existe, te recomiendo colocarle otro nobre");
+		   		 go =false;
+		   	 }
 		   	 if(!e.setNombre(nombre)){
 		   		 edit.setError("Olvidaste colocar el nombre!");
 		   		 go =false;
@@ -97,10 +104,11 @@ public class AddAsignaturaFragment extends DialogFragment{
 		   	  
 		   	 
 		   	 if(go){
-				String sem_id = ((MainActivity) getActivity()).getPreferences("semester_id");
+				
 				long id = Long.parseLong(sem_id);
 			   	e.setSemestreID(id);
-		   	    DatabaseHelper mHelper =  ((MainActivity)getActivity()).mHelper;
+				e.setNota_simulada(e.getNotaRequerida()+"");
+		   	    
 		   	    e.setID(mHelper.insertSubject(e,id));
 				if(e.getID() == -1){
 					go = false;

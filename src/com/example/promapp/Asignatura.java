@@ -1,5 +1,7 @@
 package com.example.promapp;
 
+import java.text.DecimalFormat;
+
 import android.R.bool;
 
 public class Asignatura {
@@ -16,7 +18,7 @@ public class Asignatura {
 	
 
 	public Asignatura() {
-		this.estado = "";
+		this.estado = "En Progreso";
 		this.nombre = "";
 	}
 	public String getNombre() {
@@ -50,7 +52,7 @@ public class Asignatura {
 		if(!nota.isEmpty()){
 			float prom = Float.parseFloat(nota);
 			if(prom>=0 && prom<=5){
-				this.nota_requerida = prom;
+				this.nota_requerida = roundTwoDecimals(prom);
 				
 			}else{
 				return false;
@@ -101,7 +103,7 @@ public class Asignatura {
 			if(!nota_simulada.isEmpty()){
 				float prom = Float.parseFloat(nota_simulada);
 				if(prom>=0 && prom<=5){
-					this.nota_simulada= prom;
+					this.nota_simulada= roundTwoDecimals(prom);
 				}else{
 					return false;
 				}
@@ -122,7 +124,7 @@ public class Asignatura {
 			if(!nota.isEmpty()){
 				float prom = Float.parseFloat(nota);
 				if(prom>=0 && prom<=5){
-					this.nota_real= prom;
+					this.nota_real= roundTwoDecimals( prom);
 				}else{
 					return false;
 				}
@@ -147,5 +149,11 @@ public void setEvaluaciones(Evaluation[] evaluaciones) {
 public Evaluation[] getEvaluaciones() {
 	return evaluaciones;
 }
-
+float roundTwoDecimals(float d)
+{
+    DecimalFormat twoDForm = new DecimalFormat("#.##");
+    return Float.valueOf(twoDForm.format(d));
 }
+}
+
+

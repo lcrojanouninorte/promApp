@@ -2,19 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+     android:cacheColorHint="@android:color/transparent"
     android:gravity="center"
-    android:padding="10dp"
+
+    android:background="@drawable/bgrepeat"
     android:orientation="vertical" >
 	<LinearLayout
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:gravity="center_vertical|right" >
+	    android:layout_height="0dp"
+	    android:layout_weight="0.1"
+	    android:background="@drawable/green_ribbon"
+	    android:gravity="center" >
+
 		<TextView
 		    android:id="@+id/textView1"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
+		    android:layout_gravity="center"
+		    android:paddingBottom="15dp"
 		    android:text="@string/principal_title"
-		    android:textAppearance="?android:attr/textAppearanceLarge" />
+		    android:textAppearance="?android:attr/textAppearanceLarge"
+		    android:textColor="@android:color/white" />
+
 	</LinearLayout>
 	<LinearLayout
 	    android:layout_width="match_parent"
@@ -24,8 +33,10 @@
 	    android:gravity="center_vertical|right" >
 		<LinearLayout
 		    android:layout_width="0dp"
+		    android:padding="10dp"
 		    android:layout_height="wrap_content" 
 		    android:orientation="vertical"
+		    
 		    android:gravity="center_vertical|left"
 		    android:layout_weight="0.5">
 		    <TextView
@@ -49,6 +60,7 @@
 		    android:layout_width="0dp"
 		    android:layout_height="match_parent" 
 		    android:orientation="vertical"
+		   
 		    android:gravity="center"
 		    android:layout_weight="0.5"
 		   >
@@ -68,6 +80,8 @@
             android:id="@+id/buttonEditarSemestre"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:background="#660099CC"
+            android:layout_margin="5dp"
             android:layout_weight="0.5"
             android:text="@string/text_editar_semestre" />
     </LinearLayout>
@@ -79,14 +93,18 @@
 	    <Button
             android:id="@+id/buttonSimPromAsignaturas"
             android:layout_width="0dp"
+            android:layout_margin="5dp"
             android:layout_height="match_parent"
+            android:background="#66AA66CC"
             android:layout_weight="0.5"
             android:text="@string/text_simulador_semestre" />
 
 	    <Button
 	        android:id="@+id/buttonSimuladorPromSemestral"
 	        android:layout_width="0dp"
+	        android:layout_margin="5dp"
 	        android:layout_height="match_parent"
+	        android:background="#66FF4444"
 	        android:layout_weight="0.5"
 	        android:text="@string/text_simulador_acumulado" />
 

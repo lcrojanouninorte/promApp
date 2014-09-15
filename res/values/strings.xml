@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+  <color name="green">#1A99CC00</color>
     <string name="app_name">promApp</string>
     <string name="action_settings">Settings</string>
     <string name="action_reset">Reinicar Todo</string>

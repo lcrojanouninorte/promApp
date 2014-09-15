@@ -1,5 +1,7 @@
 package com.example.promapp;
 
+import java.text.DecimalFormat;
+
 import android.R.integer;
 
 public class Semester {
@@ -17,24 +19,25 @@ public class Semester {
 
 	public Semester(String semestre, long student_id, float promRequerido) {
 		// TODO Auto-generated constructor stub
-		this.promRequerido = 0;
+		this.promRequerido = promRequerido;
 		this.semestre = semestre;
-		this.estado = "Vacio";
 		this.creditosSemestre = 0;
 		this.student_id = student_id;
 		this.promReal = 0;
-		this.promRequerido = promRequerido;
+		this.diferencia = 0;
+		this.promSimulado =promRequerido;
+		this.estado = "En Progreso";
 
 	}
 
 	public Semester() {
 		this.promRequerido = 0;
 		this.semestre = "";
-		this.estado = "Vacio";
+		this.estado = "En Progreso";
 		this.creditosSemestre = 0;
 		this.student_id = 0;
 		this.promReal = 0;
-		this.promRequerido = 0;
+
 	}
 
 	public float getPromRequerido() {
@@ -42,7 +45,7 @@ public class Semester {
 	}
 	public boolean setPromRequerido(float promRequerido) {
 		if(promRequerido>0 && promRequerido<5.0){
-			this.promRequerido = promRequerido;
+			this.promRequerido = roundTwoDecimals(promRequerido);
 		}else{
 			return false;
 		}
@@ -84,6 +87,7 @@ public class Semester {
 	}
 
 	public float getPromReal() {
+		
 
 		return promReal;
 	}
@@ -98,7 +102,7 @@ public class Semester {
 	}
 
 	public void setPromReal(float prom) {
-		this.promReal = prom;
+		this.promReal = roundTwoDecimals(prom);
 		
 	}
 
@@ -111,7 +115,7 @@ public class Semester {
 		return this.promSimulado;
 	}
 	public void setPromSimulado(float promSimulado) {
-		this.promSimulado = promSimulado;
+		this.promSimulado = roundTwoDecimals(promSimulado);
 	}
 
 	public void setDiferencia(float dif) {
@@ -121,5 +125,12 @@ public class Semester {
 	public float getDiferencia() {
 		return diferencia;
 	}
+	
+	float roundTwoDecimals(float d)
+	{
+	    DecimalFormat twoDForm = new DecimalFormat("#.##");
+	    return Float.valueOf(twoDForm.format(d));
+	}
+	
 	
 }

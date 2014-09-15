@@ -108,9 +108,8 @@ public class FirstTimeFragment extends DialogFragment{
 			    Spinner spinner = (Spinner)v.findViewById(R.id.spinnerSemestreACusar);
 			   	String semestre = spinner.getSelectedItem().toString();
 		   	    DatabaseHelper mHelper =  ((MainActivity)getActivity()).mHelper;
-		   	    e.setID(mHelper.insertStudent(e));
-				if(e.getID() != -1){
-				   	 
+		   	    e.setID(mHelper.insertStudentFirsTime(e));
+				if(e.getID() != -1){	 
 					//crear un semestre
 					Semester sem = new Semester(semestre, e.getID(),e.getPromAcum());
 					sem.setID(mHelper.insertSemester(e.getID(),sem));
@@ -122,7 +121,8 @@ public class FirstTimeFragment extends DialogFragment{
 	                  	edit.setError(null);
 	                  	((MainActivity)getActivity()).mHelper.closeDB();
 					}else{
-						((MainActivity)getActivity()).setPreferences("semestre", sem.getSemestre());
+						((MainActivity)getActivity()).setPreferences("stud_id", e.getID()+"");
+						((MainActivity)getActivity()).setPreferences("sem_id", sem.getSemestre());
 					}
 				}else{
 					go = false;
