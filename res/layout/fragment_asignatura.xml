@@ -157,27 +157,15 @@
     android:layout_gravity="center"
     android:minHeight="40dp"
     android:text=""
-    android:textOff="@string/estado_en_progreso"
-    android:textOn="@string/estado_finalizado"
+    android:textOff="Asignatura en Progreso"
+    android:textOn="Asignatura en Finalizada!"
     android:textSize="16sp" />
 
       <LinearLayout
          android:layout_width="match_parent"
-         android:layout_height="0dp"
-         android:layout_weight="0.1"
-         android:layout_gravity="center" >
+         android:layout_height="wrap_content"
 
-         <Button
-             android:id="@+id/buttonRecalcular"
-             style="?android:attr/buttonStyleSmall"
-             android:layout_width="0dp"
-             android:layout_height="fill_parent"
-             android:layout_weight="0.3"
-             android:minHeight="25dp"
-             android:minWidth="25dp"
-              android:layout_gravity="center|bottom"
-             android:text="@string/text_recalcular_promedio"
-             android:textSize="12sp" />
+         android:layout_gravity="center" >
 
           <Button
               android:id="@+id/buttonAddNewEval"
