@@ -2,6 +2,7 @@ package com.example.promapp;
 
 import java.text.DecimalFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 import android.util.Log;
 
@@ -77,9 +78,10 @@ public class SimulatorHelper {
 		 
 	}
 
-	public Asignatura[] getNotaAsignaturasSimuladas(Asignatura[] asignaturas, float notaRequerida, float dif, int CM) {
+	public HashMap<String, Object> getNotaAsignaturasSimuladas(Asignatura[] asignaturas, float notaRequerida, float dif, int CM) {
 		//getPuntosObtenidosAsignatura(asignaturas);
 		//obtener creidotos a excluir, es decir las asignaturas finalizadas
+		HashMap<String, Object> hm = new HashMap<String, Object>();
 		int creditosExcluidos = 0;
 		float creditosUsables = 0;
 		float notaSimulada  = -1;
@@ -98,12 +100,15 @@ public class SimulatorHelper {
 					puntos = notaRequerida*asignatura.getCreditos();
 					float cred = asignatura.getCreditos(); 
 					porcion = (float)(cred/creditosUsables)*dif; //porcion que le toca de la diferencia;
-					notaSimulada = (puntos+porcion)/cred;
+					notaSimulada =(float) (puntos+porcion)/cred;
 					
 				}
-				if(!(notaSimulada <= 5)){
+				if(!(notaSimulada <= 5 && notaSimulada>=0)){
 					//si no es menor de 5 no es posible ese prom deseado
-					return null;
+					//Puee que sea una nota menor a 0 o mayor a 5
+					hm.put("mensaje", "Requeire una nota de "+notaSimulada + "que no es posible sacar");
+					hm.put("asignaturas", null);
+					return hm;
 				}else{
 					asignatura.setNota_simulada(notaSimulada+"");
 					asignatura.setNotaRequerida(notaSimulada+"");
@@ -111,7 +116,9 @@ public class SimulatorHelper {
 			}
 			
 		}
-		return asignaturas;
+		hm.put("mensaje", "OK");
+		hm.put("asignaturas", asignaturas);
+		return hm;
 	}
 	public Evaluation[] getNotaEvaluacionesSimuladas(Evaluation[] evals, float dif) {
 		//getPuntosObtenidosAsignatura(asignaturas);
@@ -209,4 +216,13 @@ public class SimulatorHelper {
 		return prom;
 	}
 
+	public float getPromObtenidoSemestral(Asignatura[] asigs, int cred) {
+		float prom = 0;
+		float p = 0;
+	 for (Asignatura asig: asigs) {
+		p = asig.getNotaReal()*((float)asig.getCreditos());
+		prom = prom + p;
+	}
+		return (float)prom/cred;
+	}
 }

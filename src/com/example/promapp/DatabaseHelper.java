@@ -384,19 +384,25 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 		
 	}
 	SimulatorHelper sHelper;
+	float prom_obt;
 	public String setPromDeseadoAcumulado(Student s, Semester sem,float promDeseado) {
 		Evaluation[] evaluaciones = null;
 		Asignatura[] asignaturas;
 		SQLiteDatabase db = this.getWritableDatabase();
 	    sHelper = new SimulatorHelper();
 		ContentValues data=new ContentValues();
+		//promedio obtenido en el semestre
+		
 		float semProm = sHelper.getPromRequeridoSemestral(s.getCredCursados(), sem.getCreditos(), promDeseado, s.getPromAcum());
 		
 		if(semProm <=5 && semProm>0){
-			 //actualizar el promedio necesitado en las asignaturas}
+
 			s.setPromAcumDeseado(promDeseado);
 			sem.setPromSimulado(semProm);
 		    asignaturas = getAsignaturas(sem.getID());
+			 //TODO:actualizar el promedio necesitado en las asignaturas}
+			prom_obt= sHelper.getPromObtenidoSemestral(asignaturas,sem.getCreditos());
+			//.setPromSimulado(prom_obt);
 		    float puntosRequeridos = sem.getPromSimulado()*sem.getCreditos(); //Requeridos par aucmplir con el acum deseado
 			float puntosObtenidos = sHelper.getPuntosObtenidosAsignatura(asignaturas,sem.getPromSimulado());//obtenidos con la actual config de notas
 			sem.setDiferencia(puntosRequeridos-puntosObtenidos);
@@ -410,6 +416,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 			 db.update(TABLE_STUDENT, data,COLUMN_ID + " = " + s.getID(), null);
 			 //guardar semestre
 			 //TODO: verificar si el simestre esta finalizado
+			 sem.setPromReal(prom_obt);
 			 updatePromRequeridoSemestre(sem,semProm);
 			 
 			 //actualizar asignaturas:
@@ -438,6 +445,8 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 		sHelper = new SimulatorHelper();
 		 ContentValues data=new ContentValues();
 		 data = new ContentValues();
+		 data.put(COLUMN_SEMESTER_PROM_SIMULADO,sem.getPromReal());
+		 data.put(COLUMN_SEMESTER_PROM_REAL,sem.getPromReal());
 		 data.put(COLUMN_SEMESTER_PROM_REQUERIDO,prom);
 		 db.update(TABLE_SEMESTER, data,COLUMN_ID + " = " + sem.getID(), null);
 		 sem.setPromRequerido(prom);
@@ -448,6 +457,9 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 		for (Asignatura asignatura : asignaturas) {
 			 ContentValues data=new ContentValues();
 			 data = new ContentValues();
+			 if(asignatura.getEstado().equals("Finalizado")){
+				 data.put(COLUMN_SUBJECT_NOTA_REAL,asignatura.getNotaRequerida());
+			 }
 			 data.put(COLUMN_SUBJECT_NOTA_REQUERIDA,asignatura.getNotaRequerida());
 			 db.update(TABLE_SUBJECTS, data,COLUMN_ID + " = " + asignatura.getID(), null);
 			 updatePromRequeridoEvaluaciones(asignatura.getEvaluaciones());
@@ -473,41 +485,49 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 		//Se compara la diferencia de puntos del semestre normal, y la nota simulada 
 		//nota que debe tener cada asignatura no bloqueada
 		String estado = "";
-		asignaturas =  sHelper.getNotaAsignaturasSimuladas(asignaturas,sem.getPromSimulado(),sem.getDiferencia() ,sem.getCreditos()); 
-	    if(asignaturas != null){
-	    	//una ves verificado y obtenido cuanto se debe subir cada asignatura a verificar si las evaluaciones
-	    	//permiten esa nota
-	    	for (Asignatura asignatura : asignaturas) {
-				Evaluation[] evals = getEvaluations(asignatura.getID());
-				if(!asignatura.getEstado().equals("Finalizado")){
-					asignatura.setEvaluaciones(evals);
-					if(evals!= null){
-						sHelper.distribuirPromedioAEvaluaciones(evals, asignatura.getNotaRequerida());
-				    	float porcentajeRequerido = asignatura.getNotaRequerida();
-				    	float porcentajeObtenido = sHelper.getPorcentajeObtenidoEvaluacion(evals);
-				    	// if(porcentajeObtenido<porcentajeRequerido){
-				    		 //nota que debe tener cada evaluacion de la asignatura
-				    		 evals =  sHelper.getNotaEvaluacionesSimuladas(evals, porcentajeRequerido - porcentajeObtenido); 
-				    		 if(evals != null){
-				    			 estado = "OK";
-				    			 
-				    		 }else{
-				    			 estado = "Hay notas de evaluaciones que querarian por encima de 5!";
-				    		 }
-				    	 }
-					//}
+		HashMap<String, Object> hm = new HashMap<String, Object>();
+		hm =  sHelper.getNotaAsignaturasSimuladas(asignaturas,sem.getPromSimulado(),sem.getDiferencia() ,sem.getCreditos()); 
+	    if(hm.get("mensaje").equals("OK")){
+	    	asignaturas = (Asignatura[]) hm.get("asignaturas");
+			if(asignaturas != null){
+		    	//una ves verificado y obtenido cuanto se debe subir cada asignatura a verificar si las evaluaciones
+		    	//permiten esa nota
+		    	for (Asignatura asignatura : asignaturas) {
+					Evaluation[] evals = getEvaluations(asignatura.getID());
+					if(!asignatura.getEstado().equals("Finalizado")){
+						asignatura.setEvaluaciones(evals);
+						if(evals!= null){
+							sHelper.distribuirPromedioAEvaluaciones(evals, asignatura.getNotaRequerida());
+					    	float porcentajeRequerido = asignatura.getNotaRequerida();
+					    	float porcentajeObtenido = sHelper.getPorcentajeObtenidoEvaluacion(evals);
+					    	// if(porcentajeObtenido<porcentajeRequerido){
+					    		 //nota que debe tener cada evaluacion de la asignatura
+					    		 evals =  sHelper.getNotaEvaluacionesSimuladas(evals, porcentajeRequerido - porcentajeObtenido); 
+					    		 if(evals != null){
+					    			 hm.put("mensaje", "OK");
+					    			 return  hm.get("mensaje").toString();
+					    			 
+					    		 }else{
+					    			 hm.put("mensaje", "Hay notas de evaluaciones que querarian por encima de 5!");
+					    			 return  hm.get("mensaje").toString();
+					    		 }
+					    	 }
+						//}
+					}
 				}
-			}
-
-	    	return estado;
-	    	
-	    }else{
-	    	return "Algunas asignaturas te quedarian en más de 5"; 
-	    }
-
-	 
-
+	
+		    	return  hm.get("mensaje").toString();
+		    	
+		    }else{
+		    	return hm.get("mensaje").toString(); 
+		    }
+	
 		 
+
+	    }else{
+	    	return hm.get("mensaje").toString();
+	    }
+	   
 		
 	}
 	public Asignatura[] getAsignaturas(long sem_id){
