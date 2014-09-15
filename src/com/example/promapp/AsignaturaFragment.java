@@ -61,6 +61,8 @@ public class AsignaturaFragment extends Fragment{
             
 			((TextView) rootView.findViewById(R.id.textViewNotaRequerida))
 				        .setText(""+req);
+			
+			
 			((TextView) rootView.findViewById(R.id.textViewNotaSimulada))
 						.setText(""+asig.getNotaSimulada());
 			((MainActivity)getActivity()).setPreferences("asig_id", asig.getID()+"");

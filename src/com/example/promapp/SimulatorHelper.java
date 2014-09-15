@@ -67,7 +67,7 @@ public class SimulatorHelper {
 		asignaturas = distribuirPromedioAAsignaturas(asignaturas, PromDeseado);
 	    for (Asignatura asignatura : asignaturas) {  
 	    	if(!asignatura.getEstado().equals("Finalizado")){
-			 puntos = puntos + asignatura.getCreditos()*asignatura.getNotaRequerida();
+			 puntos = puntos +((float) asignatura.getCreditos()*asignatura.getNotaRequerida());
 			 }else{
 				 puntos = puntos + asignatura.getCreditos()*asignatura.getNotaReal();
 			 }
@@ -106,6 +106,7 @@ public class SimulatorHelper {
 					return null;
 				}else{
 					asignatura.setNota_simulada(notaSimulada+"");
+					asignatura.setNotaRequerida(notaSimulada+"");
 				}
 			}
 			
@@ -168,7 +169,7 @@ public class SimulatorHelper {
 		float porcion = 0;
 		
 		//Calcular promedio con la actual configuracion de notas
-		float promObtenido = gerPromObtenidoEvals(evals);
+		float promObtenido = getPromObtenidoEvals(evals);
 		float dif = deseado - promObtenido;
 		for (Evaluation eval : evals) {
 			if (eval.getEstado().equals("Finalizado")){
@@ -198,7 +199,7 @@ public class SimulatorHelper {
 		return evals;
 	}
 
-	private float gerPromObtenidoEvals(Evaluation[] evals) {
+	public float getPromObtenidoEvals(Evaluation[] evals) {
 		float prom = 0;
 		float p = 0;
 	 for (Evaluation eval: evals) {

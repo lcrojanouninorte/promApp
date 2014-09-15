@@ -420,7 +420,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 		     
 			 return "OK";
 			}else{
-				return "Hubo un problema";
+				return out;
 			}
 		
 		}else{
@@ -452,6 +452,18 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 			 db.update(TABLE_SUBJECTS, data,COLUMN_ID + " = " + asignatura.getID(), null);
 			 updatePromRequeridoEvaluaciones(asignatura.getEvaluaciones());
 		}
+
+		
+	}
+	public void  updateNotaSimuladaAsignatura(Asignatura asignatura){
+		SQLiteDatabase db = this.getWritableDatabase();
+	
+			 ContentValues data=new ContentValues();
+			 data = new ContentValues();
+			 data.put(COLUMN_SUBJECT_NOTA_SIMULADA,asignatura.getNotaSimulada());
+			 db.update(TABLE_SUBJECTS, data,COLUMN_ID + " = " + asignatura.getID(), null);
+			 //updatePromRequeridoEvaluaciones(asignatura.getEvaluaciones());
+		
 
 		
 	}
@@ -628,31 +640,37 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 		    float nr;
 		    float pf = 0;
 		    for (Evaluation eval: evals) {
-		    	if(!eval.getEstado().equals( "Finalizado")){
+		    	//Calcular la nota final que se obtuvo
+		    	if(true){
 		    		nr = eval.getNota_requerida();
 		    		eval.setNota_real(nr);
 		    		eval.setEstado("Finalizado");
-		    		pf = pf + nr*((float)eval.getPorcentaje()/100);
+		    		pf = pf + nr*((float)eval.getPorcentaje()/100);//promedio final de la asignatura
+		    		
 		    	}
 			}
 		    
 		    if(pf<asig.getNotaRequerida()){
 		    	//Mostrar un mensaje de que no se logro lo esperado
-		    }else{
-		        //actualizar asignatura con nuevo promedio y estado
-		    	asig.setEstado("Finalizado");
-		    	asig.setNotaReal(pf+"");
-		    	asig.setNotaRequerida(pf+"");
-		    	if(updateAsignatura(asig, evals, true) =="OK"){
-		    		return "OK";
-		    	}else{
-		    		mensaje = updateAsignatura(backUpAsignatura, backUpEvaluation, false);
-		    		
-		    	}
 		    }
+	        //actualizar asignatura con nuevo promedio y estado
+	    	asig.setEstado("Finalizado");
+	    	for (Evaluation evaluation : evals) {
+				evaluation.setEstado("Finalizado");
+			}
+	    	asig.setNota_simulada(pf+"");
+	    	asig.setNotaReal(pf+"");
+	    	asig.setNotaRequerida(pf+"");
+	    	if(updateAsignatura(asig, evals, true) == "OK"){
+	    		return "Asignatura Finalizada!";
+	    	}else{
+	    		mensaje = updateAsignatura(backUpAsignatura, backUpEvaluation, false);
+	    		mensaje = "No se Guardaron lo Cambios";
+	    	}
+		    
 		  
 		}else{
-			return "Debes Ingresar Todas las Asignaturas para finalizarla";
+			return "Debes Ingresar Todas las Evaluaciones para Poder FInalizar La Asignatura";
 		}
 		return "";
 		
@@ -662,6 +680,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 		 ContentValues data=new ContentValues();
 		 data.put(COLUMN_SUBJECT_NOTA_REQUERIDA,asig.getNotaRequerida());
+		 data.put(COLUMN_SUBJECT_NOTA_SIMULADA,asig.getNotaSimulada());
 		 data.put(COLUMN_SUBJECT_NOTA_REAL,asig.getNotaReal());
 		 data.put(COLUMN_SUBJECT_ESTADO,asig.getEstado());
 		 db.update(TABLE_SUBJECTS, data,COLUMN_ID + " = " + asig.getID(), null);

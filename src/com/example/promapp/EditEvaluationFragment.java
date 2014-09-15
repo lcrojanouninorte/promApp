@@ -175,20 +175,29 @@ public class EditEvaluationFragment extends DialogFragment {
 		   		//e.setNota_Requerida(getArguments().getFloat("nota_requerida"));
 			   	e.setAsignaturaID(asig_id);
 		   	    DatabaseHelper mHelper =  ((MainActivity)getActivity()).mHelper;
-		   
+		        SimulatorHelper simHelper = new SimulatorHelper();
 		   	
 		   	   
 		   	    long id_eva = Long.parseLong(id_evaluacion);
 		   	    e.setID(id_eva);
 		   	    e.setNombre(nombre_evaluacion);
+		   	    Asignatura asignatura = mHelper.getSubjectByID(asig_id);
+		   	    Evaluation[] evals = mHelper.getEvaluations(asig_id);
+		   	    float pr  = simHelper.getPromObtenidoEvals(evals);
+		   	    if(pr<asignatura.getNotaRequerida()){
+		   	    	//TODO:mostrar algo si el promedio es menor al requerido
+		   	    }
 				if(!mHelper.updateEvaluacionesByID(e)){
+					
 					go = false;
 					toast.setText("Error al Ingresar Datos");
                   	toast.show();
                   	//nombre.setError(null);					
 				}else{
+					//actualizar promedio obtenido
 					
-
+					asignatura.setNota_simulada(pr+"");
+					mHelper.updateNotaSimuladaAsignatura(asignatura);
 				}
 			}
 			   	 
