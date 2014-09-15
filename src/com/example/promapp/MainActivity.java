@@ -72,7 +72,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void showAsignaturaFragment(){
-    	asignaturas = new AsignaturaFragment();
+    	
 	    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.container, asignaturas)
 		.addToBackStack(null)
@@ -122,14 +122,7 @@ public class MainActivity extends FragmentActivity {
 
 
 
-	public void showSimuladorSemestralFragment() {
-		SimuladorSemestralFragment sim = new SimuladorSemestralFragment();
-	    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.container, sim)
-		.addToBackStack(null)
-		.commit();
-		
-	}
+	
 	
 	double roundTwoDecimals(double d)
 	{

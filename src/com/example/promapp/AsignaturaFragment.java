@@ -132,10 +132,13 @@ public class AsignaturaFragment extends Fragment{
 							((MainActivity)getActivity()).mHelper.updateEvaluacionesByID(eva);
 						}
 						((MainActivity)getActivity()).reloadFragment("asignatura");
+						//actualizar semestre
+						//Asignatura[] asignaturas = new Asignatura[]{asig};
+						//((MainActivity)getActivity()).mHelper.updatePromRequeridoAsignaturas(asignaturas);
 						toast.setText("Simulado con éxito!");
 						toast.show();
 					}else{
-						textSim.setError("no es posible, quizas sea mejor retirar");
+						textSim.setError("no es posible sacar esa nota");
 					}
 				}else{
 					textSim.setError("Dato no valido");

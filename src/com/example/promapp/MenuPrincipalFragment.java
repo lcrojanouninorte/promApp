@@ -120,10 +120,12 @@ public class MenuPrincipalFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				
-				Log.d(TAG, "Editar Simulador asignaturas");
-				int val;
 				Bundle args = new Bundle();
-				((MainActivity)getActivity()).showAsignaturaFragment();
+		    	SemestreFragment semestre = new SemestreFragment();
+			    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+				ft.replace(R.id.container, semestre,"semestre")
+				.addToBackStack(null)
+				.commit();
 				
 			}
 		});
