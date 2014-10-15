@@ -46,7 +46,6 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
         getApplicationContext();
 		prefs = getSharedPreferences("MisPreferencias",Context.MODE_PRIVATE);
-        //Verificar si es primera vez que se usa el programa
         if(mHelper==null){
         	mHelper = new DatabaseHelper(this);
         }

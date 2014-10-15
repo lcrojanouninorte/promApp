@@ -5,6 +5,7 @@
     android:padding="5dp"
     android:orientation="vertical" 
         android:layout_gravity="center">
+        
     <TextView
         android:id="@+id/textViewTitleEditAsig"
         android:layout_width="wrap_content"
@@ -54,7 +55,7 @@
 	         android:layout_weight="0.2"
 	         android:minHeight="20dp"
 	         android:minWidth="20dp"
-	         android:text="@string/textbutton_cambiar"
+	         android:text="Calcular"
 	         android:textSize="12sp" />
 
 	 </LinearLayout>
@@ -157,8 +158,8 @@
     android:layout_gravity="center"
     android:minHeight="40dp"
     android:text=""
-    android:textOff="Asignatura en Progreso"
-    android:textOn="Asignatura en Finalizada!"
+    android:textOff="Finalizar Asignatura"
+    android:textOn="Continuar Asignatura"
     android:textSize="16sp" />
 
       <LinearLayout

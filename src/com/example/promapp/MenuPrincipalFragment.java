@@ -56,18 +56,20 @@ public class MenuPrincipalFragment extends Fragment {
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		View rootView = inflater.inflate(R.layout.fragment_menu_principal, container, false);
-		toast = Toast.makeText(getActivity().getApplicationContext(),"Bienvenido Nuevamente", Toast.LENGTH_SHORT);
+		//toast = Toast.makeText(getActivity().getApplicationContext(),"", Toast.LENGTH_SHORT);
 		DatabaseHelper mHelper =  ((MainActivity)getActivity()).mHelper;
         student = mHelper.getStudent();
         //TODO: autenticar usuario, ahora solo coje al primero que encuentre
 		  if(student == null){
 			  //Dialog Fragment si es primera vez en la aplicacion
 	        	FragmentManager fm = getActivity().getSupportFragmentManager(); 
+	        	toast = Toast.makeText(getActivity().getApplicationContext(),"Bienvenido!", Toast.LENGTH_SHORT);
 		    	FirstTimeFragment nAsig = new FirstTimeFragment();                
 		    	nAsig.show(fm, "FirstTime"); 
 	        }else{
 	        	//actualizar vista 
-				 
+	        	toast = Toast.makeText(getActivity().getApplicationContext(),"Bienvenido!", Toast.LENGTH_SHORT);
+
 	            ((TextView) rootView.findViewById(R.id.textViewNombreEstudiante))
 	            	        .setText("Nombre: "+student.getNombre());
 	            ((TextView) rootView.findViewById(R.id.textViewPromedioAcum))
