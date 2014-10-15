@@ -77,7 +77,7 @@
             android:minHeight="20dp"
             android:minWidth="20dp"
             android:textColor="#FFFFFF"
-            android:text="@string/textbutton_cambiar"
+            android:text="Calcular"
             android:textSize="12sp" />
 		   
     </LinearLayout>

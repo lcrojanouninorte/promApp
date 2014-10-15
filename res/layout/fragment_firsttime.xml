@@ -4,6 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_gravity="center"
+    android:background="@drawable/bgrepeat3"
     android:scrollbars="vertical" >
 
 	<LinearLayout 
@@ -38,11 +39,18 @@
 	        android:orientation="horizontal" 
 	        android:gravity="center"
 	        >
+
+	        <TextView
+	            android:id="@+id/textView1"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="Nombre" />
+
 	        <EditText
 	            android:id="@+id/editTextNombre"
 	            android:layout_width="match_parent"
 	            android:inputType="textPersonName"
-	            android:hint="@string/nombre"
+	            android:hint="Nombre"
 	            android:layout_height="wrap_content"  
 	            android:ems="10" >
 	   
@@ -58,6 +66,12 @@
 	        android:orientation="horizontal" 
 	        android:gravity="center"
 	        >
+
+	            <TextView
+	                android:id="@+id/textView3"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Promedio Acumulado" />
 
 	        <EditText
 	            android:id="@+id/editTextPromAcum"
@@ -81,12 +95,19 @@
 	        android:orientation="horizontal" 
 	        android:gravity="center"
 	        >
+
+	            <TextView
+	                android:id="@+id/textView4"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="TextView" />
+
 	        <EditText
 	            android:id="@+id/editTextCredCursados"
 	            android:layout_width="match_parent"
 	            android:inputType="number"
 	            android:layout_height="wrap_content"
-	            android:hint="@string/creditos_cursados"
+	            android:hint="Creditos Cursados"
 	            android:ems="10" >
 	            
 	
